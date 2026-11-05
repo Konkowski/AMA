@@ -358,7 +358,7 @@ export function generateFDS(assembly: AssemblyProject, db: EntityDB): string {
         `|:---|:---:|:---:|:---:|:---:|:---:|`,
         `| **${assembly.name}** | \`v${assembly.version}\` | ${genDate} | ${levelCounts.UN} UN · ${levelCounts.EM} EM · ${levelCounts.CM} CM | ${totalIO} | ${totalAlm} |`,
         ``,
-        `## 📑 Indice`,
+        `## 📑 Contents`,
         ``,
         `1. [🗂️ Module Tree (ISA-88)](#sec-1)`,
         `2. [📊 Cruscotto Visivo](#sec-2)`,
@@ -554,7 +554,7 @@ export function generateFDS(assembly: AssemblyProject, db: EntityDB): string {
 
         // DFMEA Matrix
         if (entity.dfmea && entity.dfmea.length > 0) {
-            lines.push(`#### 🛡️ Analisi DFMEA`);
+            lines.push(`#### 🛡️ DFMEA Analysis`);
             lines.push(`| Failure Mode | Failure Effect | S | O | D | RPN | Status |`);
             lines.push(`| :--- | :--- | :---: | :---: | :---: | :---: | :--- |`);
             for (const d of entity.dfmea) {

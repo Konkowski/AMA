@@ -1,9 +1,10 @@
 // Nothing private may ship: no personal names, e-mails, company or customer names.
+// (The public GitHub account name, which appears in the README links and badges, is allowed on purpose.)
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 
-const FORBIDDEN = [/tirelli/i, /thiago/i, /soldi/i, /konkowski/i, /voyant/i, /@gmail\./i, /@tirelli/i, /C:[\\/]Users[\\/]/i];
+const FORBIDDEN = [/tirelli/i, /thiago/i, /soldi/i, /voyant/i, /@gmail\./i, /@tirelli/i, /C:[\\/]Users[\\/]/i];
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'tests', '.git', 'release', 'dist_electron']);
 const SKIP_FILES = new Set(['package-lock.json']);
 const TEXT = /\.(ts|tsx|js|mjs|cjs|json|md|html|css|bat|txt|yml|yaml)$/i;

@@ -14,7 +14,7 @@ const STATUS_FILTERS: { id: 'all' | EntityStatus; label: string }[] = [
     { id: 'Draft', label: 'Draft' },
     { id: 'In Review', label: 'In Review' },
     { id: 'Released', label: 'Released' },
-    { id: 'Deprecated', label: 'Deprecato' },
+    { id: 'Deprecated', label: 'Deprecated' },
 ];
 const statusBadgeClass = (s?: EntityStatus) => `status-pill status-${(s || 'Draft').toLowerCase().replace(/\s+/g, '-')}`;
 import {
@@ -191,7 +191,7 @@ Deleting it will also remove all of these references. This cannot be undone. Con
                         <Search size={14} />
                         <input
                             className="input input-sm"
-                            placeholder={`Filtra ${tabConfig.label.toLowerCase()}...`}
+                            placeholder={`Filter ${tabConfig.label.toLowerCase()}...`}
                             value={filterText}
                             onChange={e => setFilterText(e.target.value)}
                         />

@@ -324,17 +324,17 @@ Export anyway?`)) {
     const exports = [
         { group: 'Project & Version Control', icon: <Database size={24} />, title: 'Full Project JSON', desc: 'Complete project data. Save/restore your work.', color: 'var(--sky)', bg: 'rgba(45, 212, 191, 0.1)', action: exportJSON },
         { group: 'Project & Version Control', icon: <FolderGit2 size={24} />, title: 'ZIP for Git', desc: 'One JSON per assembled entity + SCL scaffolding, PLC tags and HMI alarms. Re-importable.', color: 'var(--cm-color)', bg: 'var(--orange-bg)', action: handleGitZip },
-        { group: 'Documentazione & Analisi', icon: <BookOpen size={24} />, title: 'Documentazione FDS', desc: 'FDS generated automatically from the Assembly tree.', color: 'var(--purple)', bg: 'var(--purple-bg)', action: exportFDS },
-        { group: 'Documentazione & Analisi', icon: <FileSpreadsheet size={24} />, title: 'Variables CSV', desc: 'All variables across the whole architecture.', color: 'var(--un-color)', bg: 'rgba(45, 212, 191, 0.1)', action: exportVariablesCSV },
-        { group: 'Documentazione & Analisi', icon: <ShieldAlert size={24} />, title: 'Alarms CSV', desc: 'All alarms with ID, levels, triggers.', color: 'var(--red)', bg: 'var(--red-bg)', action: exportAlarmsCSV },
-        { group: 'Documentazione & Analisi', icon: <Share2 size={24} />, title: 'I/O Signals CSV', desc: 'All I/O signals with addresses.', color: 'var(--em-color)', bg: 'var(--green-bg)', action: exportIOCSV },
-        { group: 'Documentazione & Analisi', icon: <FileText size={24} />, title: 'CSV DFMEA', desc: 'Full DFMEA matrix with RPN.', color: 'var(--yellow)', bg: 'var(--yellow-bg)', action: exportDFMEACSV },
+        { group: 'Documentation & Analysis', icon: <BookOpen size={24} />, title: 'FDS Documentation', desc: 'FDS generated automatically from the Assembly tree.', color: 'var(--purple)', bg: 'var(--purple-bg)', action: exportFDS },
+        { group: 'Documentation & Analysis', icon: <FileSpreadsheet size={24} />, title: 'Variables CSV', desc: 'All variables across the whole architecture.', color: 'var(--un-color)', bg: 'rgba(45, 212, 191, 0.1)', action: exportVariablesCSV },
+        { group: 'Documentation & Analysis', icon: <ShieldAlert size={24} />, title: 'Alarms CSV', desc: 'All alarms with ID, levels, triggers.', color: 'var(--red)', bg: 'var(--red-bg)', action: exportAlarmsCSV },
+        { group: 'Documentation & Analysis', icon: <Share2 size={24} />, title: 'I/O Signals CSV', desc: 'All I/O signals with addresses.', color: 'var(--em-color)', bg: 'var(--green-bg)', action: exportIOCSV },
+        { group: 'Documentation & Analysis', icon: <FileText size={24} />, title: 'CSV DFMEA', desc: 'Full DFMEA matrix with RPN.', color: 'var(--yellow)', bg: 'var(--yellow-bg)', action: exportDFMEACSV },
         { group: 'PLC Code', icon: <Code size={24} />, title: 'Structured Text Package', desc: 'Structured Text code of the entities assembled on the machine.', color: 'var(--text)', bg: 'rgba(255,255,255,0.05)', action: exportSTCode },
         { group: 'PLC Code', icon: <Cpu size={24} />, title: 'L5X Studio 5000', desc: 'Controller project importable in Studio 5000: programs, tags, I/O aliases, AOIs and EtherNet/IP hardware.', color: 'var(--red)', bg: 'var(--red-bg)', action: () => downloadL5X(assembly, db) },
         { group: 'PLC Code', icon: <Cpu size={24} />, title: 'TIA Portal (Openness)', desc: 'Complete package: SCL/UDT sources, hardware with exact order numbers, tags and a C# TIA Openness builder that builds the project on the engineering PC.', color: 'var(--sky)', bg: 'rgba(45, 212, 191, 0.1)', action: handleTia },
         { group: 'Purchasing', icon: <Package size={24} />, title: 'Purchasing BOM (CSV)', desc: 'Machine bill of materials from the SBOM: internal/supplier codes, type, quantity and firmware. Ready for purchasing.', color: 'var(--green)', bg: 'var(--green-bg)', action: exportProcurementBOM },
     ];
-    const exportGroups = ['PLC Code', 'Documentazione & Analisi', 'Purchasing', 'Project & Version Control'];
+    const exportGroups = ['PLC Code', 'Documentation & Analysis', 'Purchasing', 'Project & Version Control'];
 
     return (
         <div>

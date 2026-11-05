@@ -1,6 +1,6 @@
 // ============================================================
 // AMA — Toast / Snackbar system
-// toast('Progetto salvato', 'success') from anywhere; the
+// toast('Project saved', 'success') from anywhere; the
 // Toaster (mounted once in App) renders the stack bottom-right.
 // ============================================================
 import React, { useEffect, useState } from 'react';

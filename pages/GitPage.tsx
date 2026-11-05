@@ -234,12 +234,12 @@ export const GitPage: React.FC = () => {
                     </Card>
 
                     {/* Branches */}
-                    <Card title="Rami (Branch)" icon={<GitBranch size={15} />}>
+                    <Card title="Branches" icon={<GitBranch size={15} />}>
                         <div className="git-branch-list">
                             {branches.map(b => (
                                 <div className={`git-branch-item ${b === branch ? 'current' : ''}`} key={b}>
                                     <GitBranch size={13} />
-                                    <span style={{ flex: 1 }}>{b}{b === branch && <span className="git-cur-tag"> corrente</span>}</span>
+                                    <span style={{ flex: 1 }}>{b}{b === branch && <span className="git-cur-tag"> current</span>}</span>
                                     {b !== branch && (
                                         <>
                                             <button className="btn-icon" title="Switch to this branch" onClick={() => run(['checkout', b], `Passato a ${b}.`)}><Play size={12} /></button>
@@ -259,7 +259,7 @@ export const GitPage: React.FC = () => {
                     </Card>
 
                     {/* Remotes */}
-                    <Card title="Remoto & Sincronizzazione" icon={<Upload size={15} />}>
+                    <Card title="Remote & Sync" icon={<Upload size={15} />}>
                         {remotes.length === 0 ? (
                             <p className="git-empty">No remote configured. Add one to push/pull to GitHub/GitLab.</p>
                         ) : (
@@ -312,7 +312,7 @@ export const GitPage: React.FC = () => {
                             <span className="git-prompt">git</span>
                             <input className="input mono" placeholder="status -sb" value={rawCmd}
                                 onChange={e => setRawCmd(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') runRaw(); }} />
-                            <button className="btn btn-secondary btn-sm" disabled={!rawCmd.trim() || busy} onClick={runRaw}><Play size={13} /> Esegui</button>
+                            <button className="btn btn-secondary btn-sm" disabled={!rawCmd.trim() || busy} onClick={runRaw}><Play size={13} /> Run</button>
                         </div>
                         {rawOut && <pre className="git-graph" style={{ marginTop: 10 }}>{rawOut}</pre>}
                     </Card>

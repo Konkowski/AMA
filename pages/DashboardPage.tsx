@@ -208,8 +208,8 @@ const DashboardPage: React.FC = () => {
     const riskSegs: Seg[] = [
         { label: 'Critical (RPN ≥ 200)', value: dfmeaProfile.crit, color: 'var(--red)' },
         { label: 'High (100–199)', value: dfmeaProfile.high, color: 'var(--orange)' },
-        { label: 'Medio (50–99)', value: dfmeaProfile.med, color: 'var(--yellow)' },
-        { label: 'Basso (< 50)', value: dfmeaProfile.low, color: 'var(--em-color)' },
+        { label: 'Medium (50–99)', value: dfmeaProfile.med, color: 'var(--yellow)' },
+        { label: 'Low (< 50)', value: dfmeaProfile.low, color: 'var(--em-color)' },
     ];
 
     const cplxMax = Math.max(...complexity.map(c => c.score), 1);
@@ -287,7 +287,7 @@ const DashboardPage: React.FC = () => {
                         </ChartCard>
                         <ChartCard title="DFMEA risk profile" icon={<Shield size={15} />}>
                             <div className="dash-donut-row">
-                                <Donut segments={riskSegs} centerValue={dfmeaProfile.total} centerLabel="rischi" />
+                                <Donut segments={riskSegs} centerValue={dfmeaProfile.total} centerLabel="risks" />
                                 <Legend segments={riskSegs} />
                             </div>
                         </ChartCard>
@@ -337,7 +337,7 @@ const DashboardPage: React.FC = () => {
 
                     {/* ── QA analyzer (full width) ── */}
                     <div className="dash-grid-1">
-                        <ChartCard title="Analizzatore software (QA Checkout)" icon={<Shield size={15} />}
+                        <ChartCard title="Software analyzer (QA checkout)" icon={<Shield size={15} />}
                             right={<span className={`badge ${errorGaps > 0 ? 'badge-error' : gaps.length > 0 ? 'badge-warning' : 'badge-un'}`}>{gaps.length} findings</span>}>
                             {gaps.length === 0 ? (
                                 <div className="dash-qa-ok">

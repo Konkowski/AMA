@@ -39,7 +39,7 @@ const STATUS_META: Record<EntityStatus, { color: string; label: string }> = {
     'Draft': { color: 'var(--text-muted)', label: 'Draft' },
     'In Review': { color: 'var(--yellow)', label: 'In Review' },
     'Released': { color: 'var(--em-color)', label: 'Released' },
-    'Deprecated': { color: 'var(--red)', label: 'Deprecato' },
+    'Deprecated': { color: 'var(--red)', label: 'Deprecated' },
 };
 
 type TabId = 'info' | 'fbs' | 'variables' | 'alarms' | 'io' | 'dfmea' | 'code' | 'revisions' | 'bom';

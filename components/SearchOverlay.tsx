@@ -2,7 +2,7 @@
 // AMA — Command Palette (Ctrl+K)
 // Actions + global search in one surface: type to filter
 // commands (salva, esporta, verifica…) and project data
-// (entità, variabili, allarmi, I/O, DFMEA) together.
+// (entities, variables, alarms, I/O, DFMEA) together.
 // ============================================================
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useStore } from '../lib/store';
@@ -196,7 +196,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ open, onClose }) =
                     <span>{items.length} element{items.length !== 1 ? 'i' : 'o'}</span>
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                         <span className="search-kbd">↑↓</span> Naviga
-                        <span className="search-kbd">↵</span> Esegui
+                        <span className="search-kbd">↵</span> Run
                         <span className="search-kbd">Esc</span> Close
                     </div>
                 </div>

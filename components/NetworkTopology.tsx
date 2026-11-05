@@ -996,7 +996,7 @@ export const NetworkTopology: React.FC<NetworkTopologyProps> = ({ sbom }) => {
                                 </div>
 
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <span style={{ fontSize: '11px', color: '#cbd5e1' }}>Isolamento da Firewall</span>
+                                    <span style={{ fontSize: '11px', color: '#cbd5e1' }}>Firewall Isolation</span>
                                     <input
                                         type="checkbox"
                                         checked={!!edge.isFirewalled}
@@ -1128,7 +1128,7 @@ export const NetworkTopology: React.FC<NetworkTopologyProps> = ({ sbom }) => {
                     padding: '12px 16px', borderTop: '1px solid rgba(14,165,233,0.1)',
                     fontSize: '10px', color: '#475569',
                 }}>
-                    <div style={{ marginBottom: 6, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Legenda</div>
+                    <div style={{ marginBottom: 6, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Legend</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                         {Object.entries(typeColor).map(([type, color]) => (
                             <div key={type} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
