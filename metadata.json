@@ -1,0 +1,5 @@
+{
+  "name": "AMA — Automation Machine Architecture",
+  "description": "Builds PLC software from reusable ISA-88 blocks: a code base, machines assembled from it, and exports to Studio 5000 and TIA Portal.",
+  "requestFramePermissions": []
+}
