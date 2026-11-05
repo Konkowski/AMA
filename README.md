@@ -1,37 +1,57 @@
 # AMA — Automation Machine Architecture
 
-Desktop app (Electron + React + TypeScript) to build PLC software from reusable,
-deterministic blocks, following ISA-95, ISA-88 and PackML concepts.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/Konkowski/AMA)](https://github.com/Konkowski/AMA/releases/latest)
+![Platform](https://img.shields.io/badge/platform-Windows%20x64-lightgrey)
 
-Two workspaces:
+**Build PLC software from reusable, deterministic blocks.**
+AMA is a free desktop app (Electron + React + TypeScript) that follows the ISA-95, ISA-88 and PackML concepts: you keep a library of tested blocks, assemble machines from it, and export the result to **Studio 5000 (L5X)** and **TIA Portal (Openness package)**.
 
-- **Code base** (Product Owner): the reusable ISA-88 library (Unit, Equipment Module,
-  Control Module, Function Block) with code, alarms, I/O, components and DFMEA. It lives in
-  a Git repository you point to. A block can be *Released* only after it passes the release
-  checks; the DFMEA tells where the blocks and components need attention.
-- **Machine** (assembler): assembles a machine from the code base, adjusts it for the
-  customer (instances, parameters, SBOM, network topology), verifies it and exports to
-  Studio 5000 (L5X) and TIA Portal (Openness package), plus the documents.
+## Download
 
-It can also import a Studio 5000 `.L5X` project into a machine.
+1. Go to the [**latest release**](https://github.com/Konkowski/AMA/releases/latest).
+2. Download `AMA-vX.Y.Z-windows-x64.zip` and extract it.
+3. Run `Automation Machine Architecture.exe`.
 
-## Run
+Windows 64-bit only for now. Because the app is not code-signed yet, Windows may show *"Windows protected your PC"*: click **More info → Run anyway**.
 
-Requires Node.js 20+.
+## What it does
+
+AMA has two workspaces:
+
+- **Code base** (for the Product Owner). The reusable ISA-88 library: Unit, Equipment Module, Control Module and Function Block, with code, alarms, I/O, components and DFMEA. It lives in a Git repository that you point to. A block can only be *Released* after it passes the release checks, and the DFMEA shows where blocks and components need attention.
+- **Machine** (for the assembler). Assemble a machine from the code base, adjust it for the customer (instances, parameters, SBOM, network topology), verify it, and export to Studio 5000 (L5X) and TIA Portal, plus the documents.
+
+It can also **import a Studio 5000 `.L5X` project** into a machine.
+
+The workflow is four steps: **Machine → Assembly → Analysis → Verify and export**.
+
+## Your data stays on your computer
+
+AMA has no server and no telemetry. Your work is saved locally in your Windows user profile (`%APPDATA%\automation-machine-architecture`) and in the files you choose to save. The demo machine shipped in the app (`lib/defaults.ts`) is invented and contains no real machine data.
+
+If you use AMA with confidential code, keep your machine files and your code base in a **separate, private** repository, never inside a clone of this project.
+
+## Run from source
+
+Requires [Node.js](https://nodejs.org) 20+.
 
 ```bash
 npm install
-npm run dev            # web UI at http://localhost:3000
-npm run electron:start # desktop app (loads the built UI from dist/)
+npm run dev             # web UI at http://localhost:3000
+npm run electron:start  # desktop app (loads the built UI from dist/)
 ```
+
+Useful commands:
 
 ```bash
-npm run typecheck
-npm test
-npm run build
+npm run typecheck      # TypeScript check
+npm test               # run the tests
+npm run build          # typecheck + production build
+npm run electron:pack  # package the Windows app
 ```
 
-## Layout
+## Project layout
 
 | Folder | What |
 |---|---|
@@ -40,4 +60,12 @@ npm run build
 | `electron/` | main process and preload bridge |
 | `tests/` | tests (`npm test`) |
 
-The built-in demo machine in `lib/defaults.ts` is invented; it contains no real machine data.
+## Contributing
+
+Contributions are welcome: bug reports, ideas, documentation and code. See [CONTRIBUTING.md](CONTRIBUTING.md). New to GitHub? Opening an [issue](https://github.com/Konkowski/AMA/issues/new/choose) is the easiest way to start.
+
+## License
+
+[MIT](LICENSE). Free to use, modify and share, including at work.
+
+*Studio 5000 and Rockwell Automation are trademarks of Rockwell Automation, Inc. TIA Portal and Siemens are trademarks of Siemens AG. AMA is an independent project and is not affiliated with or endorsed by them.*
