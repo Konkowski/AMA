@@ -25,4 +25,5 @@ To look at the library itself, switch to the **Code base** workspace and open th
 - A machine with **two blocks adjusted for the customer** (`CM_ForceFeeder`, `CM_HopperLevel`) and **one block that exists only on this machine** (`CM_LubricationPump`, still Draft).
 - **DFMEA** entries in every state, including open ones, so the Analysis views have something to show.
 - Components with **alternatives**, an **SBOM** built from the blocks plus manual hardware, and a **network topology** with security zones.
-- Code written in IEC 61131-3 Structured Text, ready to export to Studio 5000 (L5X) and TIA Portal.
+- Code in IEC 61131-3 Structured Text at every level: a PackML-style state machine in the Unit, step sequences in the Equipment Modules, and drive, sensor, safety and PI weight-control logic in the Control Modules and Function Blocks. It exports to Studio 5000 (L5X) and TIA Portal.
+- A DFMEA on every block, with severity, occurrence and detection scores, linked components and alarms, in all four states (To Do, In Progress, Implemented, Verified).
