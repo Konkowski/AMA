@@ -7,6 +7,25 @@
 **Build PLC software from reusable, deterministic blocks.**
 AMA is a free desktop app (Electron + React + TypeScript) that follows the ISA-95, ISA-88 and PackML concepts: you keep a library of tested blocks, assemble machines from it, and export the result to **Studio 5000 (L5X)** and **TIA Portal (Openness package)**.
 
+## Screenshots
+
+*All screenshots use the invented demo machine in [`examples/tablet-press`](examples/tablet-press).*
+
+**Assemble a machine from released blocks**
+![Assembly tree and mind map of the demo tablet press](docs/screenshots/assembly-tree.png)
+
+**Write code at every level of the ISA-88 model**
+![Structured Text editor with a PackML-style state machine](docs/screenshots/code-base-editor.png)
+
+**See where the DFMEA says the code base needs attention**
+![Risk page ranking blocks by RPN](docs/screenshots/risk-dfmea.png)
+
+**Machine topology with IEC 62443 security zones**
+![Network topology with a connection configuration panel](docs/screenshots/network-topology.png)
+
+**Bill of materials built from the blocks you assemble**
+![SBOM table with parts derived from the code base](docs/screenshots/sbom.png)
+
 ## Download
 
 1. Go to the [**latest release**](https://github.com/Konkowski/AMA/releases/latest).
