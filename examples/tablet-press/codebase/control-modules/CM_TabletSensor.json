@@ -1,0 +1,112 @@
+{
+  "alarms": [],
+  "assignedFBs": [
+    "tp-fb-debounce"
+  ],
+  "bom": [
+    {
+      "code": "FIBER-SLIM-1",
+      "description": "Fiber optic sensor head",
+      "id": "tp-bom-ts-sens",
+      "manufacturer": "Demo Sensors",
+      "quantity": 1,
+      "type": "Hardware",
+      "unit": "pz"
+    },
+    {
+      "code": "FIBER-AMP-24",
+      "description": "Fiber amplifier",
+      "id": "tp-bom-ts-amp",
+      "manufacturer": "Demo Sensors",
+      "quantity": 1,
+      "type": "Hardware",
+      "unit": "pz"
+    }
+  ],
+  "category": "Sensor",
+  "checklist": [],
+  "code": "Filter(In := In_Raw, Time_ms := T#5ms);\nTabletPresent := Filter.Out;\nIF TabletPresent AND NOT Last THEN\n    Count := Count + 1;\nEND_IF;\nLast := TabletPresent;",
+  "currentVersion": "1.1",
+  "description": "Detects the tablet at the discharge chute, filtered against flicker, for counting.",
+  "devTimes": {
+    "commissioningHours": 4,
+    "hmiHours": 4,
+    "plcHours": 8
+  },
+  "dfmea": [
+    {
+      "actions": "Add the cleaning step to the SOP",
+      "cause": "Dust on the lens",
+      "componentId": "tp-bom-ts-sens",
+      "controls": "Periodic cleaning",
+      "detection": 4,
+      "effect": "Wrong batch count",
+      "failureMode": "Sensor dirty, tablets not counted",
+      "id": "tsd1",
+      "occurrence": 6,
+      "rpn": 120,
+      "severity": 5,
+      "status": "Implemented"
+    }
+  ],
+  "id": "tp-cm-tablet",
+  "io": [
+    {
+      "address": "Local:1:I.6",
+      "dataType": "BOOL",
+      "description": "Tablet at the discharge chute",
+      "id": "tsi1",
+      "signalId": "DI_TS_TABLET",
+      "signalType": "DI",
+      "variable": "In_Raw"
+    }
+  ],
+  "lastModifiedBy": "Demo Author",
+  "level": "CM",
+  "name": "CM_TabletSensor",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "BOOL",
+      "description": "Sensor signal",
+      "id": "ts1",
+      "name": "In_Raw",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Filtered presence",
+      "id": "ts2",
+      "name": "TabletPresent",
+      "scope": "Output"
+    },
+    {
+      "dataType": "DINT",
+      "description": "Tablets counted",
+      "id": "ts3",
+      "name": "Count",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Previous state",
+      "id": "ts4",
+      "name": "Last",
+      "scope": "Local"
+    }
+  ]
+}

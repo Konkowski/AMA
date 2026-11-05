@@ -1,0 +1,47 @@
+{
+  "alarms": [],
+  "assignedCMs": [
+    "tp-cm-door"
+  ],
+  "assignedFBs": [],
+  "category": "Safety",
+  "checklist": [],
+  "code": "",
+  "currentVersion": "1.1",
+  "description": "Allows the press to run only with the guards closed.",
+  "devTimes": {
+    "commissioningHours": 4,
+    "hmiHours": 2,
+    "plcHours": 6
+  },
+  "dfmea": [],
+  "id": "tp-em-guarding",
+  "io": [],
+  "lastModifiedBy": "Demo Author",
+  "level": "EM",
+  "name": "EM_Guarding",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "BOOL",
+      "description": "All guards closed",
+      "id": "emg1",
+      "name": "GuardsOK",
+      "scope": "Output"
+    }
+  ]
+}

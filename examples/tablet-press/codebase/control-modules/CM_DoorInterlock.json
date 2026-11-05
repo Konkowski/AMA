@@ -1,0 +1,123 @@
+{
+  "alarms": [
+    {
+      "action": "EmergencyStop",
+      "alarmId": "ALM_DR_001",
+      "id": "dra1",
+      "level": "Safety",
+      "linkedModules": [],
+      "message": "Guard door channel discrepancy",
+      "possibleCauses": "Faulty switch or wiring.",
+      "possibleSolutions": "Replace the switch and check the wiring.",
+      "triggerVariable": "Discrepancy"
+    }
+  ],
+  "assignedFBs": [],
+  "bom": [
+    {
+      "code": "SAFE-SW-2CH",
+      "description": "Safety door switch, 2 channels",
+      "id": "tp-bom-dr-sw",
+      "manufacturer": "Demo Safety",
+      "quantity": 2,
+      "type": "Hardware",
+      "unit": "pz"
+    }
+  ],
+  "category": "Safety",
+  "checklist": [],
+  "code": "Out_SafetyOK := In_Door_Ch1 AND In_Door_Ch2;\n\n// the two channels must agree within 1 s\nDiscTimer(IN := In_Door_Ch1 <> In_Door_Ch2, PT := T#1s);\nDiscrepancy := DiscTimer.Q;",
+  "currentVersion": "1.1",
+  "description": "Monitors a guard door with two channels and reports a discrepancy. Stops the turret when the door is open.",
+  "devTimes": {
+    "commissioningHours": 4,
+    "hmiHours": 4,
+    "plcHours": 8
+  },
+  "dfmea": [
+    {
+      "actions": "ALM_DR_001",
+      "alarmId": "dra1",
+      "cause": "Switch fault",
+      "componentId": "tp-bom-dr-sw",
+      "controls": "Two channels with a discrepancy alarm",
+      "detection": 3,
+      "effect": "Press runs with the guard open",
+      "failureMode": "Door switch fails closed",
+      "id": "drd1",
+      "occurrence": 2,
+      "rpn": 60,
+      "severity": 10,
+      "status": "Verified"
+    }
+  ],
+  "id": "tp-cm-door",
+  "io": [
+    {
+      "address": "Local:1:I.7",
+      "dataType": "BOOL",
+      "description": "Door switch channel 1",
+      "id": "dri1",
+      "signalId": "DI_DR_CH1",
+      "signalType": "DI",
+      "variable": "In_Door_Ch1"
+    },
+    {
+      "address": "Local:1:I.8",
+      "dataType": "BOOL",
+      "description": "Door switch channel 2",
+      "id": "dri2",
+      "signalId": "DI_DR_CH2",
+      "signalType": "DI",
+      "variable": "In_Door_Ch2"
+    }
+  ],
+  "lastModifiedBy": "Demo Author",
+  "level": "CM",
+  "name": "CM_DoorInterlock",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "BOOL",
+      "description": "Door channel 1",
+      "id": "dr1",
+      "name": "In_Door_Ch1",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Door channel 2",
+      "id": "dr2",
+      "name": "In_Door_Ch2",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Guard closed",
+      "id": "dr3",
+      "name": "Out_SafetyOK",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Channels disagree",
+      "id": "dr4",
+      "name": "Discrepancy",
+      "scope": "Output"
+    }
+  ]
+}

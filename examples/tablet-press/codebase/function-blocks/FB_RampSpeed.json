@@ -1,0 +1,58 @@
+{
+  "alarms": [],
+  "category": "Motion",
+  "code": "FUNCTION_BLOCK FB_RampSpeed\nVAR_INPUT\n    Target : REAL;\n    AccelPerS : REAL := 10.0;\n    DecelPerS : REAL := 20.0;\n    CycleS : REAL := 0.01;\nEND_VAR\nVAR_OUTPUT\n    Output : REAL;\nEND_VAR\n\nIF Output < Target THEN\n    Output := MIN(Output + AccelPerS * CycleS, Target);\nELSIF Output > Target THEN\n    Output := MAX(Output - DecelPerS * CycleS, Target);\nEND_IF;\nEND_FUNCTION_BLOCK",
+  "currentVersion": "1.1",
+  "description": "Moves a speed setpoint towards the target with a fixed acceleration and deceleration.",
+  "dfmea": [],
+  "id": "tp-fb-ramp",
+  "io": [],
+  "lastModifiedBy": "Demo Author",
+  "level": "FB",
+  "name": "FB_RampSpeed",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "REAL",
+      "description": "Target speed",
+      "id": "fbr1",
+      "name": "Target",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Acceleration",
+      "id": "fbr2",
+      "name": "AccelPerS",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Deceleration",
+      "id": "fbr3",
+      "name": "DecelPerS",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Ramped speed",
+      "id": "fbr4",
+      "name": "Output",
+      "scope": "Output"
+    }
+  ]
+}

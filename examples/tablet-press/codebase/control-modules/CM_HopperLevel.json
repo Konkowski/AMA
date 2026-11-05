@@ -1,0 +1,145 @@
+{
+  "alarms": [
+    {
+      "action": "Log",
+      "alarmId": "ALM_HO_001",
+      "id": "hoa1",
+      "level": "Warning",
+      "linkedModules": [],
+      "message": "Hopper level low, refill",
+      "possibleCauses": "Powder consumed.",
+      "possibleSolutions": "Refill the hopper.",
+      "triggerVariable": "LowLevel"
+    },
+    {
+      "action": "Stop",
+      "alarmId": "ALM_HO_002",
+      "id": "hoa2",
+      "level": "Alarm",
+      "linkedModules": [],
+      "message": "Hopper empty, stopping the press",
+      "possibleCauses": "Refill missed.",
+      "possibleSolutions": "Refill and restart.",
+      "triggerVariable": "Empty"
+    },
+    {
+      "action": "Stop",
+      "alarmId": "ALM_HO_003",
+      "id": "hoa3",
+      "level": "Fault",
+      "linkedModules": [],
+      "message": "Level transmitter wire break",
+      "possibleCauses": "Cable or sensor failure.",
+      "possibleSolutions": "Check the cable and the transmitter.",
+      "triggerVariable": "WireBreak"
+    }
+  ],
+  "assignedFBs": [
+    "tp-fb-scale"
+  ],
+  "bom": [
+    {
+      "code": "LVL-RAD-24",
+      "description": "Radar level transmitter 4-20 mA",
+      "id": "tp-bom-ho-tx",
+      "manufacturer": "Demo Sensors",
+      "quantity": 1,
+      "type": "Hardware",
+      "unit": "pz"
+    }
+  ],
+  "category": "Sensor",
+  "checklist": [],
+  "code": "Scale(Raw := In_Raw, EngMin := 0.0, EngMax := 100.0);\nLevel_pct := Scale.Value;\nWireBreak := Scale.WireBreak;\nLowLevel := Level_pct < 20.0;\nEmpty := Level_pct < 5.0;",
+  "currentVersion": "1.1",
+  "description": "Measures the powder level in the hopper and raises a refill request.",
+  "devTimes": {
+    "commissioningHours": 4,
+    "hmiHours": 4,
+    "plcHours": 8
+  },
+  "dfmea": [
+    {
+      "actions": "Compare level with fill depth",
+      "alarmId": "hoa2",
+      "cause": "Powder bridging on the probe",
+      "componentId": "tp-bom-ho-tx",
+      "controls": "Plausibility check against feeder load",
+      "detection": 5,
+      "effect": "Press runs empty, soft tablets",
+      "failureMode": "Level reads high while the hopper is empty",
+      "id": "hod1",
+      "occurrence": 3,
+      "rpn": 120,
+      "severity": 8,
+      "status": "In Progress"
+    }
+  ],
+  "id": "tp-cm-hopper",
+  "io": [
+    {
+      "address": "Local:3:I.Ch0Data",
+      "dataType": "INT",
+      "description": "Hopper level transmitter",
+      "id": "hoi1",
+      "signalId": "AI_HO_LEVEL",
+      "signalType": "AI",
+      "variable": "In_Raw"
+    }
+  ],
+  "lastModifiedBy": "Demo Author",
+  "level": "CM",
+  "name": "CM_HopperLevel",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "INT",
+      "description": "Level transmitter raw value",
+      "id": "ho1",
+      "name": "In_Raw",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Hopper level, percent",
+      "id": "ho2",
+      "name": "Level_pct",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Refill request",
+      "id": "ho3",
+      "name": "LowLevel",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Hopper empty",
+      "id": "ho4",
+      "name": "Empty",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Signal lost",
+      "id": "ho5",
+      "name": "WireBreak",
+      "scope": "Output"
+    }
+  ]
+}

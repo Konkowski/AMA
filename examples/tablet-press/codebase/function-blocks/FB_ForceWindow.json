@@ -1,0 +1,72 @@
+{
+  "alarms": [],
+  "category": "Logic",
+  "code": "FUNCTION_BLOCK FB_ForceWindow\nVAR_INPUT\n    Force_kN : REAL;\n    Target_kN : REAL;\n    Tol_pct : REAL := 10.0;\nEND_VAR\nVAR_OUTPUT\n    InWindow : BOOL;\n    TooHigh : BOOL;\n    TooLow : BOOL;\nEND_VAR\nVAR\n    Band : REAL;\nEND_VAR\n\nBand := Target_kN * Tol_pct / 100.0;\nTooHigh := Force_kN > (Target_kN + Band);\nTooLow := Force_kN < (Target_kN - Band);\nInWindow := NOT TooHigh AND NOT TooLow;\nEND_FUNCTION_BLOCK",
+  "currentVersion": "1.1",
+  "description": "Checks a measured compression force against a target and a tolerance band (percent).",
+  "dfmea": [],
+  "id": "tp-fb-window",
+  "io": [],
+  "lastModifiedBy": "Demo Author",
+  "level": "FB",
+  "name": "FB_ForceWindow",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "REAL",
+      "description": "Measured force",
+      "id": "fbw1",
+      "name": "Force_kN",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Target force",
+      "id": "fbw2",
+      "name": "Target_kN",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Tolerance",
+      "id": "fbw3",
+      "name": "Tol_pct",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Force inside the band",
+      "id": "fbw4",
+      "name": "InWindow",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Above the band",
+      "id": "fbw5",
+      "name": "TooHigh",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Below the band",
+      "id": "fbw6",
+      "name": "TooLow",
+      "scope": "Output"
+    }
+  ]
+}

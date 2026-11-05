@@ -1,0 +1,157 @@
+{
+  "alarms": [
+    {
+      "action": "Stop",
+      "alarmId": "ALM_TU_001",
+      "id": "tua1",
+      "level": "Fault",
+      "linkedModules": [],
+      "message": "Turret drive did not start",
+      "possibleCauses": "Drive tripped, brake not released or guard open.",
+      "possibleSolutions": "Check the drive and the brake, then reset.",
+      "triggerVariable": "Fault"
+    }
+  ],
+  "assignedFBs": [
+    "tp-fb-ramp"
+  ],
+  "bom": [
+    {
+      "code": "SM-5.5-4P",
+      "description": "Main motor 5.5 kW",
+      "id": "tp-bom-tu-motor",
+      "manufacturer": "Demo Motors",
+      "quantity": 1,
+      "type": "Hardware",
+      "unit": "pz"
+    },
+    {
+      "code": "VFD-5.5-400",
+      "description": "Frequency drive 5.5 kW",
+      "id": "tp-bom-tu-drv",
+      "manufacturer": "Demo Drives",
+      "quantity": 1,
+      "type": "Hardware",
+      "unit": "pz"
+    }
+  ],
+  "category": "Motion",
+  "checklist": [],
+  "code": "Ramp(Target := Speed_SP_rpm, AccelPerS := 5.0, DecelPerS := 15.0);\nIF Cmd_Run AND NOT Fault THEN\n    Out_Enable := TRUE;\n    Out_SpeedRef := Ramp.Output;\nELSE\n    Out_Enable := FALSE;\n    Out_SpeedRef := 0.0;\nEND_IF;\n\n// the drive must confirm running within 5 s\nFeedbackTimer(IN := Out_Enable AND NOT In_Running, PT := T#5s);\nFault := FeedbackTimer.Q;",
+  "currentVersion": "1.1",
+  "description": "Runs the main turret with a ramped speed and a feedback check.",
+  "devTimes": {
+    "commissioningHours": 10,
+    "hmiHours": 6,
+    "plcHours": 14
+  },
+  "dfmea": [
+    {
+      "actions": "Drive fault alarm",
+      "alarmId": "tua1",
+      "cause": "Overload or foreign material",
+      "componentId": "tp-bom-tu-motor",
+      "controls": "Torque limit in the drive, force overload stop",
+      "detection": 4,
+      "effect": "Punch and die damage, batch loss",
+      "failureMode": "Turret stalls during compression",
+      "id": "tud1",
+      "occurrence": 3,
+      "rpn": 108,
+      "severity": 9,
+      "status": "Verified"
+    }
+  ],
+  "id": "tp-cm-turret",
+  "io": [
+    {
+      "address": "Local:2:O.1",
+      "dataType": "BOOL",
+      "description": "Turret drive enable",
+      "id": "tui1",
+      "signalId": "DO_TU_EN",
+      "signalType": "DO",
+      "variable": "Out_Enable"
+    },
+    {
+      "address": "Local:1:I.1",
+      "dataType": "BOOL",
+      "description": "Turret drive running",
+      "id": "tui2",
+      "signalId": "DI_TU_RUN",
+      "signalType": "DI",
+      "variable": "In_Running"
+    },
+    {
+      "address": "Local:4:O.Ch1Data",
+      "dataType": "INT",
+      "description": "Turret speed reference",
+      "id": "tui3",
+      "signalId": "AO_TU_REF",
+      "signalType": "AO",
+      "variable": "Out_SpeedRef"
+    }
+  ],
+  "lastModifiedBy": "Demo Author",
+  "level": "CM",
+  "name": "CM_TurretDrive",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "BOOL",
+      "description": "Run request",
+      "id": "tu1",
+      "name": "Cmd_Run",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Turret speed setpoint",
+      "id": "tu2",
+      "name": "Speed_SP_rpm",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Drive running feedback",
+      "id": "tu3",
+      "name": "In_Running",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Drive enable",
+      "id": "tu4",
+      "name": "Out_Enable",
+      "scope": "Output"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Speed reference",
+      "id": "tu5",
+      "name": "Out_SpeedRef",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Drive feedback timeout",
+      "id": "tu6",
+      "name": "Fault",
+      "scope": "Output"
+    }
+  ]
+}

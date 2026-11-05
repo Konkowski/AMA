@@ -1,0 +1,162 @@
+{
+  "alarms": [
+    {
+      "action": "Stop",
+      "alarmId": "ALM_FD_001",
+      "id": "fda1",
+      "level": "Fault",
+      "linkedModules": [],
+      "message": "Fill depth servo not ready",
+      "possibleCauses": "Servo fault or no enable.",
+      "possibleSolutions": "Check the servo and reset.",
+      "triggerVariable": "Fault"
+    },
+    {
+      "action": "Log",
+      "alarmId": "ALM_FD_002",
+      "id": "fda2",
+      "level": "Warning",
+      "linkedModules": [],
+      "message": "Fill depth setpoint out of range",
+      "possibleCauses": "Wrong recipe value.",
+      "possibleSolutions": "Correct the recipe.",
+      "triggerVariable": "OutOfRange"
+    }
+  ],
+  "assignedFBs": [],
+  "bom": [
+    {
+      "code": "SRV-0.4-400",
+      "description": "Servo motor and drive 0.4 kW",
+      "id": "tp-bom-fd-servo",
+      "manufacturer": "Demo Drives",
+      "quantity": 1,
+      "type": "Hardware",
+      "unit": "pz"
+    }
+  ],
+  "category": "Motion",
+  "checklist": [],
+  "code": "IF Cmd_Move AND In_Ready AND NOT Fault THEN\n    Out_Pos_SP := LIMIT(2.0, Pos_SP_mm, 20.0);\n    Out_Start := TRUE;\nELSE\n    Out_Start := FALSE;\nEND_IF;\n\nOutOfRange := (Pos_SP_mm < 2.0) OR (Pos_SP_mm > 20.0);\nFault := NOT In_Ready AND Out_Start;",
+  "currentVersion": "1.1",
+  "description": "Positions the fill depth cam to set the powder dose, with a ready and range check.",
+  "devTimes": {
+    "commissioningHours": 4,
+    "hmiHours": 4,
+    "plcHours": 8
+  },
+  "dfmea": [
+    {
+      "actions": "Position check against recipe",
+      "alarmId": "fda1",
+      "cause": "Mechanical backlash",
+      "componentId": "tp-bom-fd-servo",
+      "controls": "Weight control loop",
+      "detection": 4,
+      "effect": "Tablet weight out of specification",
+      "failureMode": "Fill depth drifts",
+      "id": "fdd1",
+      "occurrence": 4,
+      "rpn": 112,
+      "severity": 7,
+      "status": "Implemented"
+    }
+  ],
+  "id": "tp-cm-fill",
+  "io": [
+    {
+      "address": "Local:1:I.2",
+      "dataType": "BOOL",
+      "description": "Fill depth servo ready",
+      "id": "fdi1",
+      "signalId": "DI_FD_RDY",
+      "signalType": "DI",
+      "variable": "In_Ready"
+    },
+    {
+      "address": "Local:2:O.2",
+      "dataType": "BOOL",
+      "description": "Fill depth start",
+      "id": "fdi2",
+      "signalId": "DO_FD_START",
+      "signalType": "DO",
+      "variable": "Out_Start"
+    }
+  ],
+  "lastModifiedBy": "Demo Author",
+  "level": "CM",
+  "name": "CM_FillDepth",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "BOOL",
+      "description": "Move request",
+      "id": "fd1",
+      "name": "Cmd_Move",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Fill depth setpoint",
+      "id": "fd2",
+      "name": "Pos_SP_mm",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Fill depth actual",
+      "id": "fd3",
+      "name": "Pos_PV_mm",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Servo ready",
+      "id": "fd4",
+      "name": "In_Ready",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Position command",
+      "id": "fd5",
+      "name": "Out_Pos_SP",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Start move",
+      "id": "fd6",
+      "name": "Out_Start",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Setpoint outside the allowed range",
+      "id": "fd7",
+      "name": "OutOfRange",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Servo not ready",
+      "id": "fd8",
+      "name": "Fault",
+      "scope": "Output"
+    }
+  ]
+}

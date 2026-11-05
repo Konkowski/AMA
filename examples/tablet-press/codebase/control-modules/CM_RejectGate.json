@@ -1,0 +1,157 @@
+{
+  "alarms": [
+    {
+      "action": "Stop",
+      "alarmId": "ALM_RG_001",
+      "id": "rga1",
+      "level": "Alarm",
+      "linkedModules": [],
+      "message": "Reject gate did not move",
+      "possibleCauses": "No air or valve coil failure.",
+      "possibleSolutions": "Check the air supply and the valve.",
+      "triggerVariable": "Fault"
+    }
+  ],
+  "assignedFBs": [],
+  "bom": [
+    {
+      "alternatives": [
+        {
+          "code": "VALVE-5/2-24V-HF",
+          "description": "Solenoid valve 5/2, high flow",
+          "id": "tp-bom-rg-valve-a1",
+          "manufacturer": "Alt Pneumatics",
+          "notes": "Use for heavy gates"
+        }
+      ],
+      "code": "VALVE-5/2-24V",
+      "description": "Solenoid valve 5/2",
+      "id": "tp-bom-rg-valve",
+      "manufacturer": "Demo Pneumatics",
+      "quantity": 1,
+      "type": "Hardware",
+      "unit": "pz"
+    },
+    {
+      "code": "CYL-20x50",
+      "description": "Pneumatic cylinder 20x50",
+      "id": "tp-bom-rg-cyl",
+      "manufacturer": "Demo Pneumatics",
+      "quantity": 1,
+      "type": "Hardware",
+      "unit": "pz"
+    }
+  ],
+  "category": "Valve",
+  "checklist": [],
+  "code": "IF Cmd_Reject THEN\n    Out_Valve := TRUE;\nEND_IF;\nIF NOT Cmd_Reject AND In_Safe THEN\n    Out_Valve := FALSE;\nEND_IF;\n\nMoveTimer(IN := Out_Valve XOR In_Reject, PT := T#500ms);\nFault := MoveTimer.Q;",
+  "currentVersion": "1.1",
+  "description": "Diverts rejected tablets into the reject chute with a pneumatic gate.",
+  "devTimes": {
+    "commissioningHours": 4,
+    "hmiHours": 4,
+    "plcHours": 8
+  },
+  "dfmea": [
+    {
+      "actions": "ALM_RG_001 stops the press",
+      "alarmId": "rga1",
+      "cause": "Valve or cylinder failure",
+      "componentId": "tp-bom-rg-valve",
+      "controls": "Position sensors and a timeout",
+      "detection": 3,
+      "effect": "Rejected tablets reach the product container",
+      "failureMode": "Gate stuck in the good position",
+      "id": "rgd1",
+      "occurrence": 3,
+      "rpn": 81,
+      "severity": 9,
+      "status": "Verified"
+    }
+  ],
+  "id": "tp-cm-reject",
+  "io": [
+    {
+      "address": "Local:2:O.4",
+      "dataType": "BOOL",
+      "description": "Reject gate valve",
+      "id": "rgi1",
+      "signalId": "DO_RG_VALVE",
+      "signalType": "DO",
+      "variable": "Out_Valve"
+    },
+    {
+      "address": "Local:1:I.4",
+      "dataType": "BOOL",
+      "description": "Gate in reject position",
+      "id": "rgi2",
+      "signalId": "DI_RG_REJ",
+      "signalType": "DI",
+      "variable": "In_Reject"
+    },
+    {
+      "address": "Local:1:I.5",
+      "dataType": "BOOL",
+      "description": "Gate in good position",
+      "id": "rgi3",
+      "signalId": "DI_RG_SAFE",
+      "signalType": "DI",
+      "variable": "In_Safe"
+    }
+  ],
+  "lastModifiedBy": "Demo Author",
+  "level": "CM",
+  "name": "CM_RejectGate",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "BOOL",
+      "description": "Reject request",
+      "id": "rg1",
+      "name": "Cmd_Reject",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Gate in reject position",
+      "id": "rg2",
+      "name": "In_Reject",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Gate in good position",
+      "id": "rg3",
+      "name": "In_Safe",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Valve command",
+      "id": "rg4",
+      "name": "Out_Valve",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Gate did not move",
+      "id": "rg5",
+      "name": "Fault",
+      "scope": "Output"
+    }
+  ]
+}

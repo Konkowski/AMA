@@ -1,0 +1,51 @@
+{
+  "alarms": [],
+  "category": "Sensor",
+  "code": "FUNCTION_BLOCK FB_AnalogScale\nVAR_INPUT\n    Raw : INT;\n    RawMin : INT := 0;\n    RawMax : INT := 27648;\n    EngMin : REAL := 0.0;\n    EngMax : REAL := 100.0;\nEND_VAR\nVAR_OUTPUT\n    Value : REAL;\n    WireBreak : BOOL;\nEND_VAR\n\nWireBreak := Raw < (RawMin - 1000);\nValue := EngMin + (INT_TO_REAL(Raw - RawMin) / INT_TO_REAL(RawMax - RawMin)) * (EngMax - EngMin);\nEND_FUNCTION_BLOCK",
+  "currentVersion": "1.1",
+  "description": "Scales a raw analog value to engineering units and flags a wire break.",
+  "dfmea": [],
+  "id": "tp-fb-scale",
+  "io": [],
+  "lastModifiedBy": "Demo Author",
+  "level": "FB",
+  "name": "FB_AnalogScale",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "INT",
+      "description": "Raw analog value",
+      "id": "fbs1",
+      "name": "Raw",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Scaled value",
+      "id": "fbs2",
+      "name": "Value",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Signal lost",
+      "id": "fbs3",
+      "name": "WireBreak",
+      "scope": "Output"
+    }
+  ]
+}

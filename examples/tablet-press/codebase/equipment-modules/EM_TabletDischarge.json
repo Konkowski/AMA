@@ -1,0 +1,49 @@
+{
+  "alarms": [],
+  "assignedCMs": [
+    "tp-cm-deduster",
+    "tp-cm-reject",
+    "tp-cm-tablet"
+  ],
+  "assignedFBs": [],
+  "category": "Logic",
+  "checklist": [],
+  "code": "",
+  "currentVersion": "1.1",
+  "description": "Dedusts, counts and sorts the tablets: good tablets pass, rejected ones are diverted.",
+  "devTimes": {
+    "commissioningHours": 6,
+    "hmiHours": 4,
+    "plcHours": 10
+  },
+  "dfmea": [],
+  "id": "tp-em-discharge",
+  "io": [],
+  "lastModifiedBy": "Demo Author",
+  "level": "EM",
+  "name": "EM_TabletDischarge",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "DINT",
+      "description": "Rejected tablets",
+      "id": "emd1",
+      "name": "RejectCount",
+      "scope": "Output"
+    }
+  ]
+}

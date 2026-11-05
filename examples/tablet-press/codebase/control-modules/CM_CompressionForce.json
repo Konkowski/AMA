@@ -1,0 +1,225 @@
+{
+  "alarms": [
+    {
+      "action": "Log",
+      "alarmId": "ALM_CF_001",
+      "id": "cfa1",
+      "level": "Alarm",
+      "linkedModules": [],
+      "message": "Compression force above the limit",
+      "possibleCauses": "Fill too high or granule hardness changed.",
+      "possibleSolutions": "Check the fill depth and the powder.",
+      "triggerVariable": "ForceHigh"
+    },
+    {
+      "action": "Log",
+      "alarmId": "ALM_CF_002",
+      "id": "cfa2",
+      "level": "Alarm",
+      "linkedModules": [],
+      "message": "Compression force below the limit",
+      "possibleCauses": "Fill too low or feeder starved.",
+      "possibleSolutions": "Check the feeder and the hopper.",
+      "triggerVariable": "ForceLow"
+    },
+    {
+      "action": "EmergencyStop",
+      "alarmId": "ALM_CF_003",
+      "id": "cfa3",
+      "level": "Safety",
+      "linkedModules": [],
+      "message": "Tooling overload, press stopped",
+      "possibleCauses": "Foreign object or punch jam.",
+      "possibleSolutions": "Inspect the tooling before restarting.",
+      "triggerVariable": "Overload"
+    },
+    {
+      "action": "Stop",
+      "alarmId": "ALM_CF_004",
+      "id": "cfa4",
+      "level": "Fault",
+      "linkedModules": [],
+      "message": "Force sensor wire break",
+      "possibleCauses": "Cable or amplifier failure.",
+      "possibleSolutions": "Check the cable and the amplifier.",
+      "triggerVariable": "WireBreak"
+    }
+  ],
+  "assignedFBs": [
+    "tp-fb-scale",
+    "tp-fb-window"
+  ],
+  "bom": [
+    {
+      "code": "LC-100KN",
+      "description": "Load cell 100 kN",
+      "id": "tp-bom-cf-cell",
+      "manufacturer": "Demo Sensors",
+      "quantity": 2,
+      "type": "Hardware",
+      "unit": "pz"
+    },
+    {
+      "code": "AMP-LC-4-20",
+      "description": "Load cell amplifier 4-20 mA",
+      "id": "tp-bom-cf-amp",
+      "manufacturer": "Demo Sensors",
+      "quantity": 2,
+      "type": "Hardware",
+      "unit": "pz"
+    }
+  ],
+  "category": "Sensor",
+  "checklist": [],
+  "code": "ScaleMain(Raw := In_Raw_Main, EngMin := 0.0, EngMax := 100.0);\nScalePre(Raw := In_Raw_Pre, EngMin := 0.0, EngMax := 30.0);\nForce_Main_kN := ScaleMain.Value;\nForce_Pre_kN := ScalePre.Value;\nWireBreak := ScaleMain.WireBreak OR ScalePre.WireBreak;\n\nWindow(Force_kN := Force_Main_kN, Target_kN := Target_kN, Tol_pct := Tol_pct);\nForceHigh := Window.TooHigh;\nForceLow := Window.TooLow;\nOverload := Force_Main_kN > 90.0;",
+  "currentVersion": "1.1",
+  "description": "Measures the pre-compression and main compression force and checks it against the target band.",
+  "devTimes": {
+    "commissioningHours": 12,
+    "hmiHours": 8,
+    "plcHours": 16
+  },
+  "dfmea": [
+    {
+      "actions": "Calibration schedule in the maintenance plan",
+      "alarmId": "cfa1",
+      "cause": "Aging or temperature",
+      "componentId": "tp-bom-cf-cell",
+      "controls": "Periodic calibration",
+      "detection": 6,
+      "effect": "Tablet hardness out of specification",
+      "failureMode": "Force sensor drifts",
+      "id": "cfd1",
+      "occurrence": 4,
+      "rpn": 192,
+      "severity": 8,
+      "status": "In Progress"
+    },
+    {
+      "actions": "ALM_CF_003 stops the press",
+      "alarmId": "cfa3",
+      "cause": "Sensor failure",
+      "componentId": "tp-bom-cf-cell",
+      "controls": "Wire break alarm and an independent drive torque limit",
+      "detection": 5,
+      "effect": "Punch and die damage",
+      "failureMode": "Overload not detected",
+      "id": "cfd2",
+      "occurrence": 2,
+      "rpn": 100,
+      "severity": 10,
+      "status": "Implemented"
+    }
+  ],
+  "id": "tp-cm-force",
+  "io": [
+    {
+      "address": "Local:3:I.Ch1Data",
+      "dataType": "INT",
+      "description": "Main compression force",
+      "id": "cfi1",
+      "signalId": "AI_CF_MAIN",
+      "signalType": "AI",
+      "variable": "In_Raw_Main"
+    },
+    {
+      "address": "Local:3:I.Ch2Data",
+      "dataType": "INT",
+      "description": "Pre-compression force",
+      "id": "cfi2",
+      "signalId": "AI_CF_PRE",
+      "signalType": "AI",
+      "variable": "In_Raw_Pre"
+    }
+  ],
+  "lastModifiedBy": "Demo Author",
+  "level": "CM",
+  "name": "CM_CompressionForce",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "INT",
+      "description": "Main force raw value",
+      "id": "cf1",
+      "name": "In_Raw_Main",
+      "scope": "Input"
+    },
+    {
+      "dataType": "INT",
+      "description": "Pre-compression raw value",
+      "id": "cf2",
+      "name": "In_Raw_Pre",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Target main force",
+      "id": "cf3",
+      "name": "Target_kN",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Tolerance, percent",
+      "id": "cf4",
+      "name": "Tol_pct",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Main compression force",
+      "id": "cf5",
+      "name": "Force_Main_kN",
+      "scope": "Output"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Pre-compression force",
+      "id": "cf6",
+      "name": "Force_Pre_kN",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Force above the band",
+      "id": "cf7",
+      "name": "ForceHigh",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Force below the band",
+      "id": "cf8",
+      "name": "ForceLow",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Tooling overload",
+      "id": "cf9",
+      "name": "Overload",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Signal lost",
+      "id": "cf10",
+      "name": "WireBreak",
+      "scope": "Output"
+    }
+  ]
+}

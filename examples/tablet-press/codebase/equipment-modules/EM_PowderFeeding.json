@@ -1,0 +1,48 @@
+{
+  "alarms": [],
+  "assignedCMs": [
+    "tp-cm-feeder",
+    "tp-cm-hopper"
+  ],
+  "assignedFBs": [],
+  "category": "Logic",
+  "checklist": [],
+  "code": "",
+  "currentVersion": "1.1",
+  "description": "Keeps the dies filled: feeder speed follows the hopper level and the fill demand.",
+  "devTimes": {
+    "commissioningHours": 8,
+    "hmiHours": 6,
+    "plcHours": 12
+  },
+  "dfmea": [],
+  "id": "tp-em-feeding",
+  "io": [],
+  "lastModifiedBy": "Demo Author",
+  "level": "EM",
+  "name": "EM_PowderFeeding",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "BOOL",
+      "description": "Feeding is ready",
+      "id": "emf1",
+      "name": "FeedingReady",
+      "scope": "Output"
+    }
+  ]
+}

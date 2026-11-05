@@ -1,0 +1,69 @@
+{
+  "alarms": [
+    {
+      "action": "EmergencyStop",
+      "alarmId": "ALM_UN_001",
+      "id": "una1",
+      "level": "Safety",
+      "linkedModules": [],
+      "message": "Emergency stop",
+      "possibleCauses": "Emergency button pressed.",
+      "possibleSolutions": "Release the button and reset.",
+      "triggerVariable": "EStop"
+    }
+  ],
+  "assignedEMs": [
+    "tp-em-feeding",
+    "tp-em-compression",
+    "tp-em-discharge",
+    "tp-em-guarding"
+  ],
+  "assignedFBs": [],
+  "category": "Logic",
+  "checklist": [],
+  "code": "",
+  "currentVersion": "1.1",
+  "description": "Rotary tablet press TP-200: feeds, compresses and sorts tablets under force control.",
+  "devTimes": {
+    "commissioningHours": 16,
+    "hmiHours": 12,
+    "plcHours": 24
+  },
+  "dfmea": [],
+  "id": "tp-un-press",
+  "io": [],
+  "lastModifiedBy": "Demo Author",
+  "level": "UN",
+  "name": "UN_TabletPress",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "INT",
+      "description": "Machine mode",
+      "id": "un1",
+      "name": "Mode",
+      "scope": "Local"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Emergency stop circuit",
+      "id": "un2",
+      "name": "EStop",
+      "scope": "Input"
+    }
+  ]
+}

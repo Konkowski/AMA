@@ -1,0 +1,164 @@
+{
+  "alarms": [
+    {
+      "action": "Stop",
+      "alarmId": "ALM_FE_001",
+      "id": "fea1",
+      "level": "Fault",
+      "linkedModules": [],
+      "message": "Feeder drive did not start",
+      "possibleCauses": "Drive tripped, motor protection open or broken coupling.",
+      "possibleSolutions": "Check the drive and the motor protection, then reset.",
+      "triggerVariable": "Fault"
+    }
+  ],
+  "assignedFBs": [],
+  "bom": [
+    {
+      "alternatives": [
+        {
+          "code": "GM-1.1-4P",
+          "description": "Gear motor 1.1 kW",
+          "id": "tp-bom-fe-motor-a1",
+          "manufacturer": "Alt Drives Co",
+          "notes": "Use with cohesive powders"
+        }
+      ],
+      "code": "GM-0.75-4P",
+      "description": "Gear motor 0.75 kW",
+      "id": "tp-bom-fe-motor",
+      "manufacturer": "Demo Motors",
+      "quantity": 1,
+      "type": "Hardware",
+      "unit": "pz"
+    },
+    {
+      "code": "VFD-0.75-400",
+      "description": "Frequency drive 0.75 kW",
+      "id": "tp-bom-fe-drv",
+      "manufacturer": "Demo Drives",
+      "quantity": 1,
+      "type": "Hardware",
+      "unit": "pz"
+    }
+  ],
+  "category": "Motion",
+  "checklist": [],
+  "code": "IF Cmd_Run AND NOT Fault THEN\n    Out_Enable := TRUE;\n    Out_SpeedRef := LIMIT(0.0, Speed_SP_rpm, 120.0) / 120.0 * 100.0;\nELSE\n    Out_Enable := FALSE;\n    Out_SpeedRef := 0.0;\nEND_IF;\n\n// the drive must confirm running within 3 s\nFeedbackTimer(IN := Out_Enable AND NOT In_Running, PT := T#3s);\nFault := FeedbackTimer.Q;",
+  "currentVersion": "1.1",
+  "description": "Drives the paddle feeder that fills the dies with powder; speed follows the fill demand.",
+  "devTimes": {
+    "commissioningHours": 6,
+    "hmiHours": 5,
+    "plcHours": 10
+  },
+  "dfmea": [
+    {
+      "actions": "Feeder fault alarm and weight trend",
+      "alarmId": "fea1",
+      "cause": "Abrasive powder, long run time",
+      "componentId": "tp-bom-fe-motor",
+      "controls": "Weight control, scheduled paddle inspection",
+      "detection": 4,
+      "effect": "Fill weight varies, tablets out of weight spec",
+      "failureMode": "Paddle wear, powder bridging in the die",
+      "id": "fed1",
+      "occurrence": 5,
+      "rpn": 140,
+      "severity": 7,
+      "status": "Implemented"
+    }
+  ],
+  "id": "tp-cm-feeder",
+  "io": [
+    {
+      "address": "Local:2:O.0",
+      "dataType": "BOOL",
+      "description": "Feeder drive enable",
+      "id": "fei1",
+      "signalId": "DO_FE_EN",
+      "signalType": "DO",
+      "variable": "Out_Enable"
+    },
+    {
+      "address": "Local:1:I.0",
+      "dataType": "BOOL",
+      "description": "Feeder drive running",
+      "id": "fei2",
+      "signalId": "DI_FE_RUN",
+      "signalType": "DI",
+      "variable": "In_Running"
+    },
+    {
+      "address": "Local:4:O.Ch0Data",
+      "dataType": "INT",
+      "description": "Feeder speed reference",
+      "id": "fei3",
+      "signalId": "AO_FE_REF",
+      "signalType": "AO",
+      "variable": "Out_SpeedRef"
+    }
+  ],
+  "lastModifiedBy": "Demo Author",
+  "level": "CM",
+  "name": "CM_ForceFeeder",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "BOOL",
+      "description": "Run request",
+      "id": "fe1",
+      "name": "Cmd_Run",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Paddle speed setpoint",
+      "id": "fe2",
+      "name": "Speed_SP_rpm",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Drive running feedback",
+      "id": "fe3",
+      "name": "In_Running",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Drive enable",
+      "id": "fe4",
+      "name": "Out_Enable",
+      "scope": "Output"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Speed reference, percent",
+      "id": "fe5",
+      "name": "Out_SpeedRef",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Drive feedback timeout",
+      "id": "fe6",
+      "name": "Fault",
+      "scope": "Output"
+    }
+  ]
+}

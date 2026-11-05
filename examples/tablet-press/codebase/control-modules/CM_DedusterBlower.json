@@ -1,0 +1,123 @@
+{
+  "alarms": [
+    {
+      "action": "Log",
+      "alarmId": "ALM_DB_001",
+      "id": "dba1",
+      "level": "Alarm",
+      "linkedModules": [],
+      "message": "Deduster blower did not start",
+      "possibleCauses": "Filter blocked or motor protection open.",
+      "possibleSolutions": "Check the filter and the protection.",
+      "triggerVariable": "Fault"
+    }
+  ],
+  "assignedFBs": [],
+  "bom": [
+    {
+      "code": "FAN-0.55-3F",
+      "description": "Extraction fan 0.55 kW",
+      "id": "tp-bom-db-fan",
+      "manufacturer": "Demo Motors",
+      "quantity": 1,
+      "type": "Hardware",
+      "unit": "pz"
+    }
+  ],
+  "category": "Motion",
+  "checklist": [],
+  "code": "Out_Run := Cmd_Run AND NOT Fault;\nFeedbackTimer(IN := Out_Run AND NOT In_Running, PT := T#3s);\nFault := FeedbackTimer.Q;",
+  "currentVersion": "1.1",
+  "description": "Runs the tablet deduster blower with a feedback timeout.",
+  "devTimes": {
+    "commissioningHours": 4,
+    "hmiHours": 4,
+    "plcHours": 8
+  },
+  "dfmea": [
+    {
+      "actions": "Add a pressure sensor in a later version",
+      "alarmId": "dba1",
+      "cause": "Blocked extraction filter",
+      "componentId": "tp-bom-db-fan",
+      "controls": "Differential pressure check in maintenance",
+      "detection": 5,
+      "effect": "Powder on tablets and cross contamination risk",
+      "failureMode": "Dust not extracted",
+      "id": "dbd1",
+      "occurrence": 4,
+      "rpn": 140,
+      "severity": 7,
+      "status": "To Do"
+    }
+  ],
+  "id": "tp-cm-deduster",
+  "io": [
+    {
+      "address": "Local:2:O.3",
+      "dataType": "BOOL",
+      "description": "Deduster blower run",
+      "id": "dbi1",
+      "signalId": "DO_DB_RUN",
+      "signalType": "DO",
+      "variable": "Out_Run"
+    },
+    {
+      "address": "Local:1:I.3",
+      "dataType": "BOOL",
+      "description": "Deduster blower running",
+      "id": "dbi2",
+      "signalId": "DI_DB_RUN",
+      "signalType": "DI",
+      "variable": "In_Running"
+    }
+  ],
+  "lastModifiedBy": "Demo Author",
+  "level": "CM",
+  "name": "CM_DedusterBlower",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "BOOL",
+      "description": "Run request",
+      "id": "db1",
+      "name": "Cmd_Run",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Blower running feedback",
+      "id": "db2",
+      "name": "In_Running",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Run command",
+      "id": "db3",
+      "name": "Out_Run",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Feedback timeout",
+      "id": "db4",
+      "name": "Fault",
+      "scope": "Output"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "alarms": [],
+  "category": "Logic",
+  "code": "FUNCTION_BLOCK FB_Debounce\nVAR_INPUT\n    In : BOOL;\n    Time_ms : TIME := T#20ms;\nEND_VAR\nVAR_OUTPUT\n    Out : BOOL;\nEND_VAR\nVAR\n    Timer : TON;\nEND_VAR\n\nTimer(IN := (In <> Out), PT := Time_ms);\nIF Timer.Q THEN\n    Out := In;\nEND_IF;\nEND_FUNCTION_BLOCK",
+  "currentVersion": "1.1",
+  "description": "Filters a digital input: the output follows the input only after it is stable for the set time.",
+  "dfmea": [],
+  "id": "tp-fb-debounce",
+  "io": [],
+  "lastModifiedBy": "Demo Author",
+  "level": "FB",
+  "name": "FB_Debounce",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "BOOL",
+      "description": "Raw input",
+      "id": "fbd1",
+      "name": "In",
+      "scope": "Input"
+    },
+    {
+      "dataType": "TIME",
+      "description": "Stable time",
+      "id": "fbd2",
+      "name": "Time_ms",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Filtered output",
+      "id": "fbd3",
+      "name": "Out",
+      "scope": "Output"
+    }
+  ]
+}

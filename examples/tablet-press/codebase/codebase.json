@@ -1,0 +1,7 @@
+{
+  "description": "Invented ISA-88 code base for solid-dose pharmaceutical machines. Demo data only.",
+  "format": 1,
+  "kind": "codebase",
+  "name": "Pharma Code Base (demo)",
+  "version": "1.1.0"
+}

@@ -1,0 +1,56 @@
+{
+  "alarms": [],
+  "assignedCMs": [
+    "tp-cm-turret",
+    "tp-cm-force",
+    "tp-cm-fill"
+  ],
+  "assignedFBs": [],
+  "category": "Logic",
+  "checklist": [],
+  "code": "",
+  "currentVersion": "1.1",
+  "description": "Compresses the powder: turret speed, fill depth and force control.",
+  "devTimes": {
+    "commissioningHours": 14,
+    "hmiHours": 10,
+    "plcHours": 20
+  },
+  "dfmea": [],
+  "id": "tp-em-compression",
+  "io": [],
+  "lastModifiedBy": "Demo Author",
+  "level": "EM",
+  "name": "EM_Compression",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "BOOL",
+      "description": "Press is compressing",
+      "id": "emc1",
+      "name": "Compressing",
+      "scope": "Output"
+    },
+    {
+      "dataType": "DINT",
+      "description": "Tablets made in the batch",
+      "id": "emc2",
+      "name": "TabletCount",
+      "scope": "Output"
+    }
+  ]
+}
