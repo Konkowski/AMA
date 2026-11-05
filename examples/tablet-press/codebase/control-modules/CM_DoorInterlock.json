@@ -49,6 +49,20 @@
       "rpn": 60,
       "severity": 10,
       "status": "Verified"
+    },
+    {
+      "actions": "Use cross-short detection in the safety relay",
+      "cause": "Cable damage",
+      "componentId": "tp-bom-dr-sw",
+      "controls": "Pulsed channels (test pulses) in the safety relay",
+      "detection": 4,
+      "effect": "Both channels read closed with the door open",
+      "failureMode": "Short circuit between the two channels",
+      "id": "drd2",
+      "occurrence": 2,
+      "rpn": 80,
+      "severity": 10,
+      "status": "Verified"
     }
   ],
   "id": "tp-cm-door",

@@ -60,6 +60,35 @@
       "rpn": 108,
       "severity": 9,
       "status": "Verified"
+    },
+    {
+      "actions": "Fault ALM_TU_001",
+      "alarmId": "tua1",
+      "cause": "Brake coil or relay failure",
+      "componentId": "tp-bom-tu-motor",
+      "controls": "Drive checks the brake feedback before enabling",
+      "detection": 3,
+      "effect": "Drive overload and a stop at start-up",
+      "failureMode": "Brake does not release",
+      "id": "tud2",
+      "occurrence": 3,
+      "rpn": 54,
+      "severity": 6,
+      "status": "Implemented"
+    },
+    {
+      "actions": "Filter cleaning in the maintenance plan",
+      "cause": "Dirty cabinet filter",
+      "componentId": "tp-bom-tu-drv",
+      "controls": "Drive temperature warning",
+      "detection": 4,
+      "effect": "Turret stops during a batch",
+      "failureMode": "Drive overtemperature",
+      "id": "tud3",
+      "occurrence": 4,
+      "rpn": 80,
+      "severity": 5,
+      "status": "Implemented"
     }
   ],
   "id": "tp-cm-turret",

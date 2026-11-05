@@ -1,0 +1,93 @@
+{
+  "alarms": [],
+  "category": "Logic",
+  "code": "FUNCTION_BLOCK FB_WeightControl\nVAR_INPUT\n    Enable : BOOL;\n    AvgWeight_mg : REAL;\n    Target_mg : REAL;\n    Kp : REAL := 0.002;\n    Ki : REAL := 0.0005;\n    CycleS : REAL := 1.0;\n    MaxCorr_mm : REAL := 1.0;\nEND_VAR\nVAR_OUTPUT\n    Correction_mm : REAL;\n    AtLimit : BOOL;\nEND_VAR\nVAR\n    Error : REAL;\n    Integral : REAL;\nEND_VAR\n\nIF NOT Enable THEN\n    Integral := 0.0;\n    Correction_mm := 0.0;\n    AtLimit := FALSE;\n    RETURN;\nEND_IF;\n\nError := Target_mg - AvgWeight_mg;\nIntegral := Integral + Error * Ki * CycleS;\n\n// anti wind-up: stop integrating at the limit\nIntegral := LIMIT(-MaxCorr_mm, Integral, MaxCorr_mm);\nCorrection_mm := LIMIT(-MaxCorr_mm, Kp * Error + Integral, MaxCorr_mm);\nAtLimit := ABS(Correction_mm) >= MaxCorr_mm;\nEND_FUNCTION_BLOCK",
+  "currentVersion": "1.1",
+  "description": "Keeps the average tablet weight on target by correcting the fill depth (PI control, slow and limited).",
+  "dfmea": [
+    {
+      "actions": "Alarm on AtLimit in the HMI",
+      "cause": "Powder property changed during the batch",
+      "controls": "Correction limit and an AtLimit flag shown to the operator",
+      "detection": 3,
+      "effect": "Tablets out of weight specification",
+      "failureMode": "Control saturates, weight keeps drifting",
+      "id": "fbpd1",
+      "occurrence": 4,
+      "rpn": 84,
+      "severity": 7,
+      "status": "Implemented"
+    }
+  ],
+  "id": "tp-fb-weight",
+  "io": [],
+  "lastModifiedBy": "Demo Author",
+  "level": "FB",
+  "name": "FB_WeightControl",
+  "revisions": [
+    {
+      "author": "Demo Author",
+      "date": "2025-11-03",
+      "notes": "Created",
+      "version": "1.0"
+    },
+    {
+      "author": "Demo Author",
+      "date": "2026-02-10",
+      "notes": "Reviewed and released",
+      "version": "1.1"
+    }
+  ],
+  "status": "Released",
+  "variables": [
+    {
+      "dataType": "BOOL",
+      "description": "Control active",
+      "id": "fbp1",
+      "name": "Enable",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Average tablet weight",
+      "id": "fbp2",
+      "name": "AvgWeight_mg",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Target tablet weight",
+      "id": "fbp3",
+      "name": "Target_mg",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Proportional gain",
+      "id": "fbp4",
+      "name": "Kp",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Integral gain",
+      "id": "fbp5",
+      "name": "Ki",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Fill depth correction",
+      "id": "fbp6",
+      "name": "Correction_mm",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Correction at its limit",
+      "id": "fbp7",
+      "name": "AtLimit",
+      "scope": "Output"
+    }
+  ]
+}

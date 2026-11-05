@@ -1,5 +1,17 @@
 {
-  "alarms": [],
+  "alarms": [
+    {
+      "action": "Log",
+      "alarmId": "ALM_EC_001",
+      "id": "emca1",
+      "level": "Alarm",
+      "linkedModules": [],
+      "message": "Force out of band, rejecting tablets",
+      "possibleCauses": "Fill, powder or tooling changed.",
+      "possibleSolutions": "Check the fill depth and the powder, then watch the trend.",
+      "triggerVariable": "Force_Out_Of_Band"
+    }
+  ],
   "assignedCMs": [
     "tp-cm-turret",
     "tp-cm-force",
@@ -8,7 +20,7 @@
   "assignedFBs": [],
   "category": "Logic",
   "checklist": [],
-  "code": "",
+  "code": "// Press sequence: start the turret, wait for speed, then watch the force\nCASE Step OF\n    0: // idle\n        Compressing := FALSE;\n        Turret_Run := FALSE;\n        IF Cmd_Start AND GuardsOK THEN Step := 10; END_IF;\n\n    10: // start the turret\n        Turret_Run := TRUE;\n        IF Turret_AtSpeed THEN Step := 20; END_IF;\n        IF Cmd_Stop OR NOT GuardsOK THEN Step := 40; END_IF;\n\n    20: // producing\n        Compressing := TRUE;\n        IF Force_Out_Of_Band THEN Step := 30; END_IF;\n        IF Cmd_Stop OR NOT GuardsOK THEN Step := 40; END_IF;\n\n    30: // force out of band: reject until it recovers\n        Reject_All := TRUE;\n        IF NOT Force_Out_Of_Band THEN\n            Reject_All := FALSE;\n            Step := 20;\n        END_IF;\n        IF Cmd_Stop OR NOT GuardsOK THEN Step := 40; END_IF;\n\n    40: // stopping\n        Compressing := FALSE;\n        Reject_All := FALSE;\n        Turret_Run := FALSE;\n        IF Turret_Stopped THEN Step := 0; END_IF;\nEND_CASE;",
   "currentVersion": "1.1",
   "description": "Compresses the powder: turret speed, fill depth and force control.",
   "devTimes": {
@@ -16,7 +28,22 @@
     "hmiHours": 10,
     "plcHours": 20
   },
-  "dfmea": [],
+  "dfmea": [
+    {
+      "actions": "Verify the reject path with a challenge test",
+      "alarmId": "emca1",
+      "cause": "Force check bypassed or not evaluated",
+      "controls": "Reject-all while the force is out of band",
+      "detection": 5,
+      "effect": "Out-of-specification tablets reach the product container",
+      "failureMode": "Press keeps producing with the force out of band",
+      "id": "emcd1",
+      "occurrence": 3,
+      "rpn": 135,
+      "severity": 9,
+      "status": "In Progress"
+    }
+  ],
   "id": "tp-em-compression",
   "io": [],
   "lastModifiedBy": "Demo Author",
@@ -50,6 +77,69 @@
       "description": "Tablets made in the batch",
       "id": "emc2",
       "name": "TabletCount",
+      "scope": "Output"
+    },
+    {
+      "dataType": "INT",
+      "description": "Sequence step",
+      "id": "emc3",
+      "name": "Step",
+      "scope": "Local"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Start request",
+      "id": "emc4",
+      "name": "Cmd_Start",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Stop request",
+      "id": "emc5",
+      "name": "Cmd_Stop",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Guards closed",
+      "id": "emc6",
+      "name": "GuardsOK",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Turret at speed",
+      "id": "emc7",
+      "name": "Turret_AtSpeed",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Turret stopped",
+      "id": "emc8",
+      "name": "Turret_Stopped",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Force outside the band",
+      "id": "emc9",
+      "name": "Force_Out_Of_Band",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Run the turret",
+      "id": "emc10",
+      "name": "Turret_Run",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Reject all tablets",
+      "id": "emc11",
+      "name": "Reject_All",
       "scope": "Output"
     }
   ]

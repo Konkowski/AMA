@@ -7,7 +7,7 @@
   "assignedFBs": [],
   "category": "Logic",
   "checklist": [],
-  "code": "",
+  "code": "// Feeder speed follows the hopper level and the fill demand\nFeedingReady := NOT Hopper_Empty AND NOT Feeder_Fault;\n\nIF FeedingReady AND Compressing THEN\n    Feeder_SP_rpm := LIMIT(20.0, Fill_Demand_pct * 1.2, 120.0);\nELSE\n    Feeder_SP_rpm := 0.0;\nEND_IF;\n\nRefill_Request := Hopper_Low;",
   "currentVersion": "1.1",
   "description": "Keeps the dies filled: feeder speed follows the hopper level and the fill demand.",
   "devTimes": {
@@ -15,7 +15,21 @@
     "hmiHours": 6,
     "plcHours": 12
   },
-  "dfmea": [],
+  "dfmea": [
+    {
+      "actions": "Plausibility check with the fill depth",
+      "cause": "Hopper empty not detected",
+      "controls": "Empty flag stops the feeding",
+      "detection": 4,
+      "effect": "Empty dies, soft tablets",
+      "failureMode": "Feeder runs without powder",
+      "id": "emfd1",
+      "occurrence": 3,
+      "rpn": 84,
+      "severity": 7,
+      "status": "Implemented"
+    }
+  ],
   "id": "tp-em-feeding",
   "io": [],
   "lastModifiedBy": "Demo Author",
@@ -42,6 +56,55 @@
       "description": "Feeding is ready",
       "id": "emf1",
       "name": "FeedingReady",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Hopper empty",
+      "id": "emf2",
+      "name": "Hopper_Empty",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Hopper level low",
+      "id": "emf3",
+      "name": "Hopper_Low",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Feeder drive fault",
+      "id": "emf4",
+      "name": "Feeder_Fault",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Press is compressing",
+      "id": "emf5",
+      "name": "Compressing",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Fill demand",
+      "id": "emf6",
+      "name": "Fill_Demand_pct",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Feeder speed setpoint",
+      "id": "emf7",
+      "name": "Feeder_SP_rpm",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Operator refill request",
+      "id": "emf8",
+      "name": "Refill_Request",
       "scope": "Output"
     }
   ]

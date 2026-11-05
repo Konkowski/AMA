@@ -67,6 +67,21 @@
       "rpn": 140,
       "severity": 7,
       "status": "Implemented"
+    },
+    {
+      "actions": "Trend the motor temperature in the HMI",
+      "alarmId": "fea1",
+      "cause": "Blocked fan or high ambient temperature",
+      "componentId": "tp-bom-fe-motor",
+      "controls": "Motor thermistor in the drive",
+      "detection": 5,
+      "effect": "Feeder stops mid-batch, partial batch loss",
+      "failureMode": "Feeder motor overheats",
+      "id": "fed2",
+      "occurrence": 3,
+      "rpn": 105,
+      "severity": 7,
+      "status": "In Progress"
     }
   ],
   "id": "tp-cm-feeder",

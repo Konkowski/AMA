@@ -8,7 +8,7 @@ The press feeds powder, compresses it under force control, dedusts the tablets, 
 
 | Path | What |
 |---|---|
-| `codebase/` | The **code base**: a reusable ISA-88 library (1 Unit, 4 Equipment Modules, 9 Control Modules, 4 Function Blocks), all Released |
+| `codebase/` | The **code base**: a reusable ISA-88 library (1 Unit, 4 Equipment Modules, 9 Control Modules, 5 Function Blocks), all Released |
 | `TP-200_machine.json` | The **machine**: assembled from that code base, with parameters, SBOM and network topology |
 
 ## Try it

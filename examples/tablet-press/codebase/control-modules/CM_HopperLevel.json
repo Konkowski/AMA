@@ -73,6 +73,21 @@
       "rpn": 120,
       "severity": 8,
       "status": "In Progress"
+    },
+    {
+      "actions": "ALM_HO_003 stops the press",
+      "alarmId": "hoa3",
+      "cause": "Electronics failure",
+      "componentId": "tp-bom-ho-tx",
+      "controls": "Wire break detection on the 4-20 mA loop",
+      "detection": 2,
+      "effect": "False refill requests",
+      "failureMode": "Level transmitter fails low",
+      "id": "hod2",
+      "occurrence": 3,
+      "rpn": 36,
+      "severity": 6,
+      "status": "Verified"
     }
   ],
   "id": "tp-cm-hopper",

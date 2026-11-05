@@ -49,6 +49,21 @@
       "rpn": 140,
       "severity": 7,
       "status": "To Do"
+    },
+    {
+      "actions": "ALM_DB_001",
+      "alarmId": "dba1",
+      "cause": "Clogged filter",
+      "componentId": "tp-bom-db-fan",
+      "controls": "Motor protection",
+      "detection": 3,
+      "effect": "Dust extraction stops",
+      "failureMode": "Blower overload",
+      "id": "dbd2",
+      "occurrence": 3,
+      "rpn": 36,
+      "severity": 4,
+      "status": "Implemented"
     }
   ],
   "id": "tp-cm-deduster",

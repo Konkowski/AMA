@@ -109,6 +109,36 @@
       "rpn": 100,
       "severity": 10,
       "status": "Implemented"
+    },
+    {
+      "actions": "Add a second independent overload channel",
+      "alarmId": "cfa3",
+      "cause": "Wrong amplifier range for the tooling",
+      "componentId": "tp-bom-cf-amp",
+      "controls": "Range check at commissioning",
+      "detection": 5,
+      "effect": "Real overload is read as the maximum value",
+      "failureMode": "Amplifier saturates at high force",
+      "id": "cfd3",
+      "occurrence": 3,
+      "rpn": 120,
+      "severity": 8,
+      "status": "To Do"
+    },
+    {
+      "actions": "ALM_CF_004 stops the press",
+      "alarmId": "cfa4",
+      "cause": "Cable routed on the moving frame",
+      "componentId": "tp-bom-cf-cell",
+      "controls": "Wire break detection",
+      "detection": 3,
+      "effect": "Force reading lost",
+      "failureMode": "Cable damaged by vibration",
+      "id": "cfd4",
+      "occurrence": 4,
+      "rpn": 84,
+      "severity": 7,
+      "status": "Implemented"
     }
   ],
   "id": "tp-cm-force",

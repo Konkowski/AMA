@@ -241,6 +241,101 @@
       "status": "Released",
       "origin": "codebase",
       "baseline": "c2ac2101:1029"
+    },
+    {
+      "id": "tp-fb-weight",
+      "name": "FB_WeightControl",
+      "description": "Keeps the average tablet weight on target by correcting the fill depth (PI control, slow and limited).",
+      "category": "Logic",
+      "level": "FB",
+      "variables": [
+        {
+          "id": "fbp1",
+          "name": "Enable",
+          "description": "Control active",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "fbp2",
+          "name": "AvgWeight_mg",
+          "description": "Average tablet weight",
+          "dataType": "REAL",
+          "scope": "Input"
+        },
+        {
+          "id": "fbp3",
+          "name": "Target_mg",
+          "description": "Target tablet weight",
+          "dataType": "REAL",
+          "scope": "Input"
+        },
+        {
+          "id": "fbp4",
+          "name": "Kp",
+          "description": "Proportional gain",
+          "dataType": "REAL",
+          "scope": "Input"
+        },
+        {
+          "id": "fbp5",
+          "name": "Ki",
+          "description": "Integral gain",
+          "dataType": "REAL",
+          "scope": "Input"
+        },
+        {
+          "id": "fbp6",
+          "name": "Correction_mm",
+          "description": "Fill depth correction",
+          "dataType": "REAL",
+          "scope": "Output"
+        },
+        {
+          "id": "fbp7",
+          "name": "AtLimit",
+          "description": "Correction at its limit",
+          "dataType": "BOOL",
+          "scope": "Output"
+        }
+      ],
+      "alarms": [],
+      "io": [],
+      "dfmea": [
+        {
+          "id": "fbpd1",
+          "failureMode": "Control saturates, weight keeps drifting",
+          "effect": "Tablets out of weight specification",
+          "cause": "Powder property changed during the batch",
+          "severity": 7,
+          "occurrence": 4,
+          "detection": 3,
+          "rpn": 84,
+          "controls": "Correction limit and an AtLimit flag shown to the operator",
+          "actions": "Alarm on AtLimit in the HMI",
+          "status": "Implemented"
+        }
+      ],
+      "revisions": [
+        {
+          "version": "1.0",
+          "date": "2025-11-03",
+          "author": "Demo Author",
+          "notes": "Created"
+        },
+        {
+          "version": "1.1",
+          "date": "2026-02-10",
+          "author": "Demo Author",
+          "notes": "Reviewed and released"
+        }
+      ],
+      "code": "FUNCTION_BLOCK FB_WeightControl\nVAR_INPUT\n    Enable : BOOL;\n    AvgWeight_mg : REAL;\n    Target_mg : REAL;\n    Kp : REAL := 0.002;\n    Ki : REAL := 0.0005;\n    CycleS : REAL := 1.0;\n    MaxCorr_mm : REAL := 1.0;\nEND_VAR\nVAR_OUTPUT\n    Correction_mm : REAL;\n    AtLimit : BOOL;\nEND_VAR\nVAR\n    Error : REAL;\n    Integral : REAL;\nEND_VAR\n\nIF NOT Enable THEN\n    Integral := 0.0;\n    Correction_mm := 0.0;\n    AtLimit := FALSE;\n    RETURN;\nEND_IF;\n\nError := Target_mg - AvgWeight_mg;\nIntegral := Integral + Error * Ki * CycleS;\n\n// anti wind-up: stop integrating at the limit\nIntegral := LIMIT(-MaxCorr_mm, Integral, MaxCorr_mm);\nCorrection_mm := LIMIT(-MaxCorr_mm, Kp * Error + Integral, MaxCorr_mm);\nAtLimit := ABS(Correction_mm) >= MaxCorr_mm;\nEND_FUNCTION_BLOCK",
+      "currentVersion": "1.1",
+      "lastModifiedBy": "Demo Author",
+      "status": "Released",
+      "origin": "codebase",
+      "baseline": "75901b50:2134"
     }
   ],
   "units": [
@@ -264,6 +359,62 @@
           "description": "Emergency stop circuit",
           "dataType": "BOOL",
           "scope": "Input"
+        },
+        {
+          "id": "un3",
+          "name": "State",
+          "description": "Machine state",
+          "dataType": "INT",
+          "scope": "Local"
+        },
+        {
+          "id": "un4",
+          "name": "Cmd_Start",
+          "description": "Start",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "un5",
+          "name": "Cmd_Stop",
+          "description": "Stop",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "un6",
+          "name": "Cmd_Reset",
+          "description": "Reset",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "un7",
+          "name": "GuardsOK",
+          "description": "Guards closed",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "un8",
+          "name": "Fault_Active",
+          "description": "Any fault active",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "un9",
+          "name": "Press_Stopped",
+          "description": "Turret stopped",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "un10",
+          "name": "Start_Press",
+          "description": "Start the press",
+          "dataType": "BOOL",
+          "scope": "Output"
         }
       ],
       "alarms": [
@@ -280,7 +431,21 @@
         }
       ],
       "io": [],
-      "dfmea": [],
+      "dfmea": [
+        {
+          "id": "und1",
+          "failureMode": "Unexpected restart after a stop",
+          "effect": "Operator injury risk",
+          "cause": "Start command held during the reset",
+          "severity": 9,
+          "occurrence": 2,
+          "detection": 3,
+          "rpn": 54,
+          "controls": "A start needs the Stopped state and a new command",
+          "actions": "Include in the safety validation",
+          "status": "Verified"
+        }
+      ],
       "revisions": [
         {
           "version": "1.0",
@@ -295,7 +460,7 @@
           "notes": "Reviewed and released"
         }
       ],
-      "code": "",
+      "code": "// Machine states (PackML style): 0 Stopped, 1 Starting, 2 Execute, 3 Stopping, 4 Aborted\nCASE State OF\n    0: // stopped\n        IF Cmd_Start AND GuardsOK AND NOT Fault_Active THEN State := 1; END_IF;\n\n    1: // starting: let the drives and the feeder come up\n        Start_Press := TRUE;\n        StartTimer(IN := TRUE, PT := T#8s);\n        IF StartTimer.Q THEN State := 2; END_IF;\n        IF Fault_Active OR NOT GuardsOK THEN State := 4; END_IF;\n\n    2: // execute: producing tablets\n        StartTimer(IN := FALSE);\n        IF Cmd_Stop THEN State := 3; END_IF;\n        IF Fault_Active OR NOT GuardsOK THEN State := 4; END_IF;\n\n    3: // stopping: ramp down\n        Start_Press := FALSE;\n        IF Press_Stopped THEN State := 0; END_IF;\n\n    4: // aborted: needs a deliberate reset\n        Start_Press := FALSE;\n        IF Cmd_Reset AND GuardsOK AND NOT Fault_Active THEN State := 0; END_IF;\nEND_CASE;\n\nMode := State;",
       "currentVersion": "1.1",
       "lastModifiedBy": "Demo Author",
       "status": "Released",
@@ -313,7 +478,7 @@
         "tp-em-guarding"
       ],
       "origin": "codebase",
-      "baseline": "b2d5c1a9:876"
+      "baseline": "f73817b:2892"
     }
   ],
   "equipmentModules": [
@@ -330,11 +495,74 @@
           "description": "Feeding is ready",
           "dataType": "BOOL",
           "scope": "Output"
+        },
+        {
+          "id": "emf2",
+          "name": "Hopper_Empty",
+          "description": "Hopper empty",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emf3",
+          "name": "Hopper_Low",
+          "description": "Hopper level low",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emf4",
+          "name": "Feeder_Fault",
+          "description": "Feeder drive fault",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emf5",
+          "name": "Compressing",
+          "description": "Press is compressing",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emf6",
+          "name": "Fill_Demand_pct",
+          "description": "Fill demand",
+          "dataType": "REAL",
+          "scope": "Input"
+        },
+        {
+          "id": "emf7",
+          "name": "Feeder_SP_rpm",
+          "description": "Feeder speed setpoint",
+          "dataType": "REAL",
+          "scope": "Output"
+        },
+        {
+          "id": "emf8",
+          "name": "Refill_Request",
+          "description": "Operator refill request",
+          "dataType": "BOOL",
+          "scope": "Output"
         }
       ],
       "alarms": [],
       "io": [],
-      "dfmea": [],
+      "dfmea": [
+        {
+          "id": "emfd1",
+          "failureMode": "Feeder runs without powder",
+          "effect": "Empty dies, soft tablets",
+          "cause": "Hopper empty not detected",
+          "severity": 7,
+          "occurrence": 3,
+          "detection": 4,
+          "rpn": 84,
+          "controls": "Empty flag stops the feeding",
+          "actions": "Plausibility check with the fill depth",
+          "status": "Implemented"
+        }
+      ],
       "revisions": [
         {
           "version": "1.0",
@@ -349,7 +577,7 @@
           "notes": "Reviewed and released"
         }
       ],
-      "code": "",
+      "code": "// Feeder speed follows the hopper level and the fill demand\nFeedingReady := NOT Hopper_Empty AND NOT Feeder_Fault;\n\nIF FeedingReady AND Compressing THEN\n    Feeder_SP_rpm := LIMIT(20.0, Fill_Demand_pct * 1.2, 120.0);\nELSE\n    Feeder_SP_rpm := 0.0;\nEND_IF;\n\nRefill_Request := Hopper_Low;",
       "currentVersion": "1.1",
       "lastModifiedBy": "Demo Author",
       "status": "Released",
@@ -365,7 +593,7 @@
         "tp-cm-hopper"
       ],
       "origin": "codebase",
-      "baseline": "c90de220:501"
+      "baseline": "e22e2211:1828"
     },
     {
       "id": "tp-em-compression",
@@ -387,11 +615,101 @@
           "description": "Tablets made in the batch",
           "dataType": "DINT",
           "scope": "Output"
+        },
+        {
+          "id": "emc3",
+          "name": "Step",
+          "description": "Sequence step",
+          "dataType": "INT",
+          "scope": "Local"
+        },
+        {
+          "id": "emc4",
+          "name": "Cmd_Start",
+          "description": "Start request",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emc5",
+          "name": "Cmd_Stop",
+          "description": "Stop request",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emc6",
+          "name": "GuardsOK",
+          "description": "Guards closed",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emc7",
+          "name": "Turret_AtSpeed",
+          "description": "Turret at speed",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emc8",
+          "name": "Turret_Stopped",
+          "description": "Turret stopped",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emc9",
+          "name": "Force_Out_Of_Band",
+          "description": "Force outside the band",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emc10",
+          "name": "Turret_Run",
+          "description": "Run the turret",
+          "dataType": "BOOL",
+          "scope": "Output"
+        },
+        {
+          "id": "emc11",
+          "name": "Reject_All",
+          "description": "Reject all tablets",
+          "dataType": "BOOL",
+          "scope": "Output"
         }
       ],
-      "alarms": [],
+      "alarms": [
+        {
+          "id": "emca1",
+          "alarmId": "ALM_EC_001",
+          "message": "Force out of band, rejecting tablets",
+          "level": "Alarm",
+          "triggerVariable": "Force_Out_Of_Band",
+          "action": "Log",
+          "linkedModules": [],
+          "possibleCauses": "Fill, powder or tooling changed.",
+          "possibleSolutions": "Check the fill depth and the powder, then watch the trend."
+        }
+      ],
       "io": [],
-      "dfmea": [],
+      "dfmea": [
+        {
+          "id": "emcd1",
+          "failureMode": "Press keeps producing with the force out of band",
+          "effect": "Out-of-specification tablets reach the product container",
+          "cause": "Force check bypassed or not evaluated",
+          "severity": 9,
+          "occurrence": 3,
+          "detection": 5,
+          "rpn": 135,
+          "controls": "Reject-all while the force is out of band",
+          "actions": "Verify the reject path with a challenge test",
+          "status": "In Progress",
+          "alarmId": "emca1"
+        }
+      ],
       "revisions": [
         {
           "version": "1.0",
@@ -406,7 +724,7 @@
           "notes": "Reviewed and released"
         }
       ],
-      "code": "",
+      "code": "// Press sequence: start the turret, wait for speed, then watch the force\nCASE Step OF\n    0: // idle\n        Compressing := FALSE;\n        Turret_Run := FALSE;\n        IF Cmd_Start AND GuardsOK THEN Step := 10; END_IF;\n\n    10: // start the turret\n        Turret_Run := TRUE;\n        IF Turret_AtSpeed THEN Step := 20; END_IF;\n        IF Cmd_Stop OR NOT GuardsOK THEN Step := 40; END_IF;\n\n    20: // producing\n        Compressing := TRUE;\n        IF Force_Out_Of_Band THEN Step := 30; END_IF;\n        IF Cmd_Stop OR NOT GuardsOK THEN Step := 40; END_IF;\n\n    30: // force out of band: reject until it recovers\n        Reject_All := TRUE;\n        IF NOT Force_Out_Of_Band THEN\n            Reject_All := FALSE;\n            Step := 20;\n        END_IF;\n        IF Cmd_Stop OR NOT GuardsOK THEN Step := 40; END_IF;\n\n    40: // stopping\n        Compressing := FALSE;\n        Reject_All := FALSE;\n        Turret_Run := FALSE;\n        IF Turret_Stopped THEN Step := 0; END_IF;\nEND_CASE;",
       "currentVersion": "1.1",
       "lastModifiedBy": "Demo Author",
       "status": "Released",
@@ -423,7 +741,7 @@
         "tp-cm-fill"
       ],
       "origin": "codebase",
-      "baseline": "d6b9b726:617"
+      "baseline": "e680c6ed:3239"
     },
     {
       "id": "tp-em-discharge",
@@ -438,11 +756,101 @@
           "description": "Rejected tablets",
           "dataType": "DINT",
           "scope": "Output"
+        },
+        {
+          "id": "emd2",
+          "name": "Compressing",
+          "description": "Press is compressing",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emd3",
+          "name": "Reject_All",
+          "description": "Reject all tablets",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emd4",
+          "name": "Metal_Detected",
+          "description": "Metal detected",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emd5",
+          "name": "Weight_Out_Of_Spec",
+          "description": "Tablet weight out of specification",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emd6",
+          "name": "TabletPresent",
+          "description": "Tablet at the chute",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emd7",
+          "name": "Gate_InReject",
+          "description": "Gate in reject position",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emd8",
+          "name": "Deduster_Run",
+          "description": "Run the deduster",
+          "dataType": "BOOL",
+          "scope": "Output"
+        },
+        {
+          "id": "emd9",
+          "name": "Gate_Reject",
+          "description": "Divert to the reject chute",
+          "dataType": "BOOL",
+          "scope": "Output"
+        },
+        {
+          "id": "emd10",
+          "name": "GateFault",
+          "description": "Gate did not follow",
+          "dataType": "BOOL",
+          "scope": "Output"
         }
       ],
-      "alarms": [],
+      "alarms": [
+        {
+          "id": "emda1",
+          "alarmId": "ALM_ED_001",
+          "message": "Reject gate did not follow the request",
+          "level": "Alarm",
+          "triggerVariable": "GateFault",
+          "action": "Stop",
+          "linkedModules": [],
+          "possibleCauses": "Gate stuck or no air.",
+          "possibleSolutions": "Check the gate and the air supply."
+        }
+      ],
       "io": [],
-      "dfmea": [],
+      "dfmea": [
+        {
+          "id": "emdd1",
+          "failureMode": "Rejected tablet reaches the good container",
+          "effect": "Out-of-specification product released",
+          "cause": "Gate late or stuck",
+          "severity": 10,
+          "occurrence": 2,
+          "detection": 4,
+          "rpn": 80,
+          "controls": "Gate position feedback and a timeout",
+          "actions": "Challenge test with a known reject at each qualification",
+          "status": "Implemented",
+          "alarmId": "emda1"
+        }
+      ],
       "revisions": [
         {
           "version": "1.0",
@@ -457,7 +865,7 @@
           "notes": "Reviewed and released"
         }
       ],
-      "code": "",
+      "code": "// Tablets are dedusted, counted and sorted\nDeduster_Run := Compressing;\nGate_Reject := Reject_All OR Metal_Detected OR Weight_Out_Of_Spec;\n\nRejectEdge(CLK := Gate_Reject AND TabletPresent);\nIF RejectEdge.Q THEN\n    RejectCount := RejectCount + 1;\nEND_IF;\n\n// the reject gate must follow the request within the timeout\nGateFault := Gate_Reject AND NOT Gate_InReject AND GateTimer.Q;",
       "currentVersion": "1.1",
       "lastModifiedBy": "Demo Author",
       "status": "Released",
@@ -474,7 +882,7 @@
         "tp-cm-tablet"
       ],
       "origin": "codebase",
-      "baseline": "6ecfe791:525"
+      "baseline": "e111ab15:2526"
     },
     {
       "id": "tp-em-guarding",
@@ -489,11 +897,60 @@
           "description": "All guards closed",
           "dataType": "BOOL",
           "scope": "Output"
+        },
+        {
+          "id": "emg2",
+          "name": "Door_Front_OK",
+          "description": "Front door closed",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emg3",
+          "name": "Door_Rear_OK",
+          "description": "Rear door closed",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emg4",
+          "name": "EStop_Active",
+          "description": "Emergency stop pressed",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emg5",
+          "name": "Reset_Cmd",
+          "description": "Reset",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "emg6",
+          "name": "Stop_Request",
+          "description": "Stop the press",
+          "dataType": "BOOL",
+          "scope": "Output"
         }
       ],
       "alarms": [],
       "io": [],
-      "dfmea": [],
+      "dfmea": [
+        {
+          "id": "emgd1",
+          "failureMode": "Press restarts by itself after the door closes",
+          "effect": "Operator injury risk",
+          "cause": "Automatic reset of the stop request",
+          "severity": 10,
+          "occurrence": 2,
+          "detection": 3,
+          "rpn": 60,
+          "controls": "Reset requires a deliberate operator command",
+          "actions": "Cover in the safety validation",
+          "status": "Verified"
+        }
+      ],
       "revisions": [
         {
           "version": "1.0",
@@ -508,7 +965,7 @@
           "notes": "Reviewed and released"
         }
       ],
-      "code": "",
+      "code": "// The press runs only with every guard closed and the emergency stop released\nGuardsOK := Door_Front_OK AND Door_Rear_OK AND NOT EStop_Active;\n\nIF NOT GuardsOK THEN\n    Stop_Request := TRUE;\nELSIF Reset_Cmd THEN\n    Stop_Request := FALSE;\nEND_IF;",
       "currentVersion": "1.1",
       "lastModifiedBy": "Demo Author",
       "status": "Released",
@@ -523,7 +980,7 @@
         "tp-cm-door"
       ],
       "origin": "codebase",
-      "baseline": "8c3aad65:448"
+      "baseline": "ecd9ad5d:1538"
     }
   ],
   "controlModules": [
@@ -634,6 +1091,21 @@
           "status": "Implemented",
           "componentId": "tp-bom-fe-motor",
           "alarmId": "fea1"
+        },
+        {
+          "id": "fed2",
+          "failureMode": "Feeder motor overheats",
+          "effect": "Feeder stops mid-batch, partial batch loss",
+          "cause": "Blocked fan or high ambient temperature",
+          "severity": 7,
+          "occurrence": 3,
+          "detection": 5,
+          "rpn": 105,
+          "controls": "Motor thermistor in the drive",
+          "actions": "Trend the motor temperature in the HMI",
+          "status": "In Progress",
+          "componentId": "tp-bom-fe-motor",
+          "alarmId": "fea1"
         }
       ],
       "revisions": [
@@ -650,7 +1122,7 @@
           "notes": "Reviewed and released"
         }
       ],
-      "code": "IF Cmd_Run AND NOT Fault THEN\n    Out_Enable := TRUE;\n    Out_SpeedRef := LIMIT(0.0, Speed_SP_rpm, 90.0) / 120.0 * 100.0;\nELSE\n    Out_Enable := FALSE;\n    Out_SpeedRef := 0.0;\nEND_IF;\n\n// the drive must confirm running within 3 s\nFeedbackTimer(IN := Out_Enable AND NOT In_Running, PT := T#3s);\nFault := FeedbackTimer.Q;",
+      "code": "IF Cmd_Run AND NOT Fault THEN\n    Out_Enable := TRUE;\n    Out_SpeedRef := LIMIT(0.0, Speed_SP_rpm, 90.0) / 90.0 * 100.0;\nELSE\n    Out_Enable := FALSE;\n    Out_SpeedRef := 0.0;\nEND_IF;\n\n// the drive must confirm running within 3 s\nFeedbackTimer(IN := Out_Enable AND NOT In_Running, PT := T#3s);\nFault := FeedbackTimer.Q;",
       "currentVersion": "1.1",
       "lastModifiedBy": "Demo Author",
       "status": "Released",
@@ -691,7 +1163,7 @@
         }
       ],
       "origin": "codebase",
-      "baseline": "49252345:2965"
+      "baseline": "93a8b52a:3340"
     },
     {
       "id": "tp-cm-hopper",
@@ -797,6 +1269,21 @@
           "status": "In Progress",
           "componentId": "tp-bom-ho-tx",
           "alarmId": "hoa2"
+        },
+        {
+          "id": "hod2",
+          "failureMode": "Level transmitter fails low",
+          "effect": "False refill requests",
+          "cause": "Electronics failure",
+          "severity": 6,
+          "occurrence": 3,
+          "detection": 2,
+          "rpn": 36,
+          "controls": "Wire break detection on the 4-20 mA loop",
+          "actions": "ALM_HO_003 stops the press",
+          "status": "Verified",
+          "componentId": "tp-bom-ho-tx",
+          "alarmId": "hoa3"
         }
       ],
       "revisions": [
@@ -838,7 +1325,7 @@
         }
       ],
       "origin": "codebase",
-      "baseline": "441508a0:2443"
+      "baseline": "38a0204d:2774"
     },
     {
       "id": "tp-cm-turret",
@@ -947,6 +1434,35 @@
           "status": "Verified",
           "componentId": "tp-bom-tu-motor",
           "alarmId": "tua1"
+        },
+        {
+          "id": "tud2",
+          "failureMode": "Brake does not release",
+          "effect": "Drive overload and a stop at start-up",
+          "cause": "Brake coil or relay failure",
+          "severity": 6,
+          "occurrence": 3,
+          "detection": 3,
+          "rpn": 54,
+          "controls": "Drive checks the brake feedback before enabling",
+          "actions": "Fault ALM_TU_001",
+          "status": "Implemented",
+          "componentId": "tp-bom-tu-motor",
+          "alarmId": "tua1"
+        },
+        {
+          "id": "tud3",
+          "failureMode": "Drive overtemperature",
+          "effect": "Turret stops during a batch",
+          "cause": "Dirty cabinet filter",
+          "severity": 5,
+          "occurrence": 4,
+          "detection": 4,
+          "rpn": 80,
+          "controls": "Drive temperature warning",
+          "actions": "Filter cleaning in the maintenance plan",
+          "status": "Implemented",
+          "componentId": "tp-bom-tu-drv"
         }
       ],
       "revisions": [
@@ -997,7 +1513,7 @@
         }
       ],
       "origin": "codebase",
-      "baseline": "1f64c1f5:2746"
+      "baseline": "4c7de604:3416"
     },
     {
       "id": "tp-cm-force",
@@ -1173,6 +1689,36 @@
           "status": "Implemented",
           "componentId": "tp-bom-cf-cell",
           "alarmId": "cfa3"
+        },
+        {
+          "id": "cfd3",
+          "failureMode": "Amplifier saturates at high force",
+          "effect": "Real overload is read as the maximum value",
+          "cause": "Wrong amplifier range for the tooling",
+          "severity": 8,
+          "occurrence": 3,
+          "detection": 5,
+          "rpn": 120,
+          "controls": "Range check at commissioning",
+          "actions": "Add a second independent overload channel",
+          "status": "To Do",
+          "componentId": "tp-bom-cf-amp",
+          "alarmId": "cfa3"
+        },
+        {
+          "id": "cfd4",
+          "failureMode": "Cable damaged by vibration",
+          "effect": "Force reading lost",
+          "cause": "Cable routed on the moving frame",
+          "severity": 7,
+          "occurrence": 4,
+          "detection": 3,
+          "rpn": 84,
+          "controls": "Wire break detection",
+          "actions": "ALM_CF_004 stops the press",
+          "status": "Implemented",
+          "componentId": "tp-bom-cf-cell",
+          "alarmId": "cfa4"
         }
       ],
       "revisions": [
@@ -1224,7 +1770,7 @@
         }
       ],
       "origin": "codebase",
-      "baseline": "3bec55d9:4267"
+      "baseline": "80833ebe:4970"
     },
     {
       "id": "tp-cm-fill",
@@ -1288,6 +1834,27 @@
           "description": "Servo not ready",
           "dataType": "BOOL",
           "scope": "Output"
+        },
+        {
+          "id": "fd9",
+          "name": "WeightCtl_On",
+          "description": "Weight control enabled",
+          "dataType": "BOOL",
+          "scope": "Input"
+        },
+        {
+          "id": "fd10",
+          "name": "AvgWeight_mg",
+          "description": "Average tablet weight",
+          "dataType": "REAL",
+          "scope": "Input"
+        },
+        {
+          "id": "fd11",
+          "name": "Target_mg",
+          "description": "Target tablet weight",
+          "dataType": "REAL",
+          "scope": "Input"
         }
       ],
       "alarms": [
@@ -1349,6 +1916,21 @@
           "status": "Implemented",
           "componentId": "tp-bom-fd-servo",
           "alarmId": "fda1"
+        },
+        {
+          "id": "fdd2",
+          "failureMode": "Servo loses its position after a power loss",
+          "effect": "Wrong fill depth at restart",
+          "cause": "Missing absolute encoder",
+          "severity": 8,
+          "occurrence": 2,
+          "detection": 4,
+          "rpn": 64,
+          "controls": "Absolute encoder and a homing check",
+          "actions": "Recipe check at the start",
+          "status": "Verified",
+          "componentId": "tp-bom-fd-servo",
+          "alarmId": "fda1"
         }
       ],
       "revisions": [
@@ -1365,11 +1947,13 @@
           "notes": "Reviewed and released"
         }
       ],
-      "code": "IF Cmd_Move AND In_Ready AND NOT Fault THEN\n    Out_Pos_SP := LIMIT(2.0, Pos_SP_mm, 20.0);\n    Out_Start := TRUE;\nELSE\n    Out_Start := FALSE;\nEND_IF;\n\nOutOfRange := (Pos_SP_mm < 2.0) OR (Pos_SP_mm > 20.0);\nFault := NOT In_Ready AND Out_Start;",
+      "code": "IF Cmd_Move AND In_Ready AND NOT Fault THEN\n    Out_Pos_SP := LIMIT(2.0, Pos_SP_mm, 20.0);\n    Out_Start := TRUE;\nELSE\n    Out_Start := FALSE;\nEND_IF;\n\nOutOfRange := (Pos_SP_mm < 2.0) OR (Pos_SP_mm > 20.0);\nFault := NOT In_Ready AND Out_Start;\n\n// slow weight correction from the average tablet weight\nWeightCtl(Enable := WeightCtl_On, AvgWeight_mg := AvgWeight_mg, Target_mg := Target_mg);\nOut_Pos_SP := LIMIT(2.0, Out_Pos_SP + WeightCtl.Correction_mm, 20.0);",
       "currentVersion": "1.1",
       "lastModifiedBy": "Demo Author",
       "status": "Released",
-      "assignedFBs": [],
+      "assignedFBs": [
+        "tp-fb-weight"
+      ],
       "checklist": [],
       "devTimes": {
         "plcHours": 8,
@@ -1388,7 +1972,7 @@
         }
       ],
       "origin": "codebase",
-      "baseline": "1ab7e801:2691"
+      "baseline": "5a9908bb:3601"
     },
     {
       "id": "tp-cm-deduster",
@@ -1474,6 +2058,21 @@
           "status": "To Do",
           "componentId": "tp-bom-db-fan",
           "alarmId": "dba1"
+        },
+        {
+          "id": "dbd2",
+          "failureMode": "Blower overload",
+          "effect": "Dust extraction stops",
+          "cause": "Clogged filter",
+          "severity": 4,
+          "occurrence": 3,
+          "detection": 3,
+          "rpn": 36,
+          "controls": "Motor protection",
+          "actions": "ALM_DB_001",
+          "status": "Implemented",
+          "componentId": "tp-bom-db-fan",
+          "alarmId": "dba1"
         }
       ],
       "revisions": [
@@ -1513,7 +2112,7 @@
         }
       ],
       "origin": "codebase",
-      "baseline": "c3eaeeda:1955"
+      "baseline": "8f9c8558:2233"
     },
     {
       "id": "tp-cm-reject",
@@ -1615,6 +2214,21 @@
           "status": "Verified",
           "componentId": "tp-bom-rg-valve",
           "alarmId": "rga1"
+        },
+        {
+          "id": "rgd2",
+          "failureMode": "Compressed air lost",
+          "effect": "The gate cannot divert rejected tablets",
+          "cause": "Supply failure",
+          "severity": 8,
+          "occurrence": 3,
+          "detection": 2,
+          "rpn": 48,
+          "controls": "Air pressure switch on the machine",
+          "actions": "ALM_RG_001",
+          "status": "Implemented",
+          "componentId": "tp-bom-rg-cyl",
+          "alarmId": "rga1"
         }
       ],
       "revisions": [
@@ -1672,7 +2286,7 @@
         }
       ],
       "origin": "codebase",
-      "baseline": "ae513a35:2628"
+      "baseline": "97f0552e:2946"
     },
     {
       "id": "tp-cm-tablet",
@@ -1736,6 +2350,20 @@
           "actions": "Add the cleaning step to the SOP",
           "status": "Implemented",
           "componentId": "tp-bom-ts-sens"
+        },
+        {
+          "id": "tsd2",
+          "failureMode": "False counts from vibration",
+          "effect": "Batch count off",
+          "cause": "Sensor mounted on the moving chute",
+          "severity": 4,
+          "occurrence": 5,
+          "detection": 4,
+          "rpn": 80,
+          "controls": "Debounce time and a mounting bracket",
+          "actions": "Compare with the turret revolution count",
+          "status": "Implemented",
+          "componentId": "tp-bom-ts-amp"
         }
       ],
       "revisions": [
@@ -1786,7 +2414,7 @@
         }
       ],
       "origin": "codebase",
-      "baseline": "c22b6266:1697"
+      "baseline": "69804a59:2034"
     },
     {
       "id": "tp-cm-door",
@@ -1872,6 +2500,20 @@
           "status": "Verified",
           "componentId": "tp-bom-dr-sw",
           "alarmId": "dra1"
+        },
+        {
+          "id": "drd2",
+          "failureMode": "Short circuit between the two channels",
+          "effect": "Both channels read closed with the door open",
+          "cause": "Cable damage",
+          "severity": 10,
+          "occurrence": 2,
+          "detection": 4,
+          "rpn": 80,
+          "controls": "Pulsed channels (test pulses) in the safety relay",
+          "actions": "Use cross-short detection in the safety relay",
+          "status": "Verified",
+          "componentId": "tp-bom-dr-sw"
         }
       ],
       "revisions": [
@@ -1911,7 +2553,7 @@
         }
       ],
       "origin": "codebase",
-      "baseline": "8c714f4e:2028"
+      "baseline": "107e039b:2398"
     },
     {
       "id": "tp-cm-lube",
@@ -1940,7 +2582,22 @@
           "dataType": "BOOL"
         }
       ],
-      "dfmea": [],
+      "dfmea": [
+        {
+          "id": "lud1",
+          "failureMode": "Pump runs dry",
+          "effect": "Turret bearings wear faster",
+          "cause": "Empty grease reservoir",
+          "severity": 6,
+          "occurrence": 4,
+          "detection": 4,
+          "rpn": 96,
+          "controls": "Periodic refill in the maintenance plan",
+          "actions": "Add a reservoir level switch",
+          "status": "To Do",
+          "componentId": "tp-bom-lu-pump"
+        }
+      ],
       "revisions": [
         {
           "version": "0.1",
@@ -2085,7 +2742,14 @@
                 "id": "n-cm5",
                 "refId": "tp-cm-fill",
                 "level": "CM",
-                "children": [],
+                "children": [
+                  {
+                    "id": "n-fb3",
+                    "refId": "tp-fb-weight",
+                    "level": "FB",
+                    "children": []
+                  }
+                ],
                 "label": "Fill depth",
                 "params": [
                   {
@@ -2093,6 +2757,12 @@
                     "name": "Fill depth",
                     "value": "9.5",
                     "unit": "mm"
+                  },
+                  {
+                    "id": "p9",
+                    "name": "Target tablet weight",
+                    "value": "250",
+                    "unit": "mg"
                   }
                 ]
               },

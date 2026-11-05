@@ -47,6 +47,20 @@
       "rpn": 120,
       "severity": 5,
       "status": "Implemented"
+    },
+    {
+      "actions": "Compare with the turret revolution count",
+      "cause": "Sensor mounted on the moving chute",
+      "componentId": "tp-bom-ts-amp",
+      "controls": "Debounce time and a mounting bracket",
+      "detection": 4,
+      "effect": "Batch count off",
+      "failureMode": "False counts from vibration",
+      "id": "tsd2",
+      "occurrence": 5,
+      "rpn": 80,
+      "severity": 4,
+      "status": "Implemented"
     }
   ],
   "id": "tp-cm-tablet",

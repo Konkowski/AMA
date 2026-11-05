@@ -67,6 +67,21 @@
       "rpn": 81,
       "severity": 9,
       "status": "Verified"
+    },
+    {
+      "actions": "ALM_RG_001",
+      "alarmId": "rga1",
+      "cause": "Supply failure",
+      "componentId": "tp-bom-rg-cyl",
+      "controls": "Air pressure switch on the machine",
+      "detection": 2,
+      "effect": "The gate cannot divert rejected tablets",
+      "failureMode": "Compressed air lost",
+      "id": "rgd2",
+      "occurrence": 3,
+      "rpn": 48,
+      "severity": 8,
+      "status": "Implemented"
     }
   ],
   "id": "tp-cm-reject",

@@ -21,7 +21,7 @@
   "assignedFBs": [],
   "category": "Logic",
   "checklist": [],
-  "code": "",
+  "code": "// Machine states (PackML style): 0 Stopped, 1 Starting, 2 Execute, 3 Stopping, 4 Aborted\nCASE State OF\n    0: // stopped\n        IF Cmd_Start AND GuardsOK AND NOT Fault_Active THEN State := 1; END_IF;\n\n    1: // starting: let the drives and the feeder come up\n        Start_Press := TRUE;\n        StartTimer(IN := TRUE, PT := T#8s);\n        IF StartTimer.Q THEN State := 2; END_IF;\n        IF Fault_Active OR NOT GuardsOK THEN State := 4; END_IF;\n\n    2: // execute: producing tablets\n        StartTimer(IN := FALSE);\n        IF Cmd_Stop THEN State := 3; END_IF;\n        IF Fault_Active OR NOT GuardsOK THEN State := 4; END_IF;\n\n    3: // stopping: ramp down\n        Start_Press := FALSE;\n        IF Press_Stopped THEN State := 0; END_IF;\n\n    4: // aborted: needs a deliberate reset\n        Start_Press := FALSE;\n        IF Cmd_Reset AND GuardsOK AND NOT Fault_Active THEN State := 0; END_IF;\nEND_CASE;\n\nMode := State;",
   "currentVersion": "1.1",
   "description": "Rotary tablet press TP-200: feeds, compresses and sorts tablets under force control.",
   "devTimes": {
@@ -29,7 +29,21 @@
     "hmiHours": 12,
     "plcHours": 24
   },
-  "dfmea": [],
+  "dfmea": [
+    {
+      "actions": "Include in the safety validation",
+      "cause": "Start command held during the reset",
+      "controls": "A start needs the Stopped state and a new command",
+      "detection": 3,
+      "effect": "Operator injury risk",
+      "failureMode": "Unexpected restart after a stop",
+      "id": "und1",
+      "occurrence": 2,
+      "rpn": 54,
+      "severity": 9,
+      "status": "Verified"
+    }
+  ],
   "id": "tp-un-press",
   "io": [],
   "lastModifiedBy": "Demo Author",
@@ -64,6 +78,62 @@
       "id": "un2",
       "name": "EStop",
       "scope": "Input"
+    },
+    {
+      "dataType": "INT",
+      "description": "Machine state",
+      "id": "un3",
+      "name": "State",
+      "scope": "Local"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Start",
+      "id": "un4",
+      "name": "Cmd_Start",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Stop",
+      "id": "un5",
+      "name": "Cmd_Stop",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Reset",
+      "id": "un6",
+      "name": "Cmd_Reset",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Guards closed",
+      "id": "un7",
+      "name": "GuardsOK",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Any fault active",
+      "id": "un8",
+      "name": "Fault_Active",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Turret stopped",
+      "id": "un9",
+      "name": "Press_Stopped",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Start the press",
+      "id": "un10",
+      "name": "Start_Press",
+      "scope": "Output"
     }
   ]
 }

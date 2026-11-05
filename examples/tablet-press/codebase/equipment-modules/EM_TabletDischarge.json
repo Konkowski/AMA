@@ -1,5 +1,17 @@
 {
-  "alarms": [],
+  "alarms": [
+    {
+      "action": "Stop",
+      "alarmId": "ALM_ED_001",
+      "id": "emda1",
+      "level": "Alarm",
+      "linkedModules": [],
+      "message": "Reject gate did not follow the request",
+      "possibleCauses": "Gate stuck or no air.",
+      "possibleSolutions": "Check the gate and the air supply.",
+      "triggerVariable": "GateFault"
+    }
+  ],
   "assignedCMs": [
     "tp-cm-deduster",
     "tp-cm-reject",
@@ -8,7 +20,7 @@
   "assignedFBs": [],
   "category": "Logic",
   "checklist": [],
-  "code": "",
+  "code": "// Tablets are dedusted, counted and sorted\nDeduster_Run := Compressing;\nGate_Reject := Reject_All OR Metal_Detected OR Weight_Out_Of_Spec;\n\nRejectEdge(CLK := Gate_Reject AND TabletPresent);\nIF RejectEdge.Q THEN\n    RejectCount := RejectCount + 1;\nEND_IF;\n\n// the reject gate must follow the request within the timeout\nGateFault := Gate_Reject AND NOT Gate_InReject AND GateTimer.Q;",
   "currentVersion": "1.1",
   "description": "Dedusts, counts and sorts the tablets: good tablets pass, rejected ones are diverted.",
   "devTimes": {
@@ -16,7 +28,22 @@
     "hmiHours": 4,
     "plcHours": 10
   },
-  "dfmea": [],
+  "dfmea": [
+    {
+      "actions": "Challenge test with a known reject at each qualification",
+      "alarmId": "emda1",
+      "cause": "Gate late or stuck",
+      "controls": "Gate position feedback and a timeout",
+      "detection": 4,
+      "effect": "Out-of-specification product released",
+      "failureMode": "Rejected tablet reaches the good container",
+      "id": "emdd1",
+      "occurrence": 2,
+      "rpn": 80,
+      "severity": 10,
+      "status": "Implemented"
+    }
+  ],
   "id": "tp-em-discharge",
   "io": [],
   "lastModifiedBy": "Demo Author",
@@ -43,6 +70,69 @@
       "description": "Rejected tablets",
       "id": "emd1",
       "name": "RejectCount",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Press is compressing",
+      "id": "emd2",
+      "name": "Compressing",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Reject all tablets",
+      "id": "emd3",
+      "name": "Reject_All",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Metal detected",
+      "id": "emd4",
+      "name": "Metal_Detected",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Tablet weight out of specification",
+      "id": "emd5",
+      "name": "Weight_Out_Of_Spec",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Tablet at the chute",
+      "id": "emd6",
+      "name": "TabletPresent",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Gate in reject position",
+      "id": "emd7",
+      "name": "Gate_InReject",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Run the deduster",
+      "id": "emd8",
+      "name": "Deduster_Run",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Divert to the reject chute",
+      "id": "emd9",
+      "name": "Gate_Reject",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Gate did not follow",
+      "id": "emd10",
+      "name": "GateFault",
       "scope": "Output"
     }
   ]

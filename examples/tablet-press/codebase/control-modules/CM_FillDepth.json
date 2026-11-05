@@ -23,7 +23,9 @@
       "triggerVariable": "OutOfRange"
     }
   ],
-  "assignedFBs": [],
+  "assignedFBs": [
+    "tp-fb-weight"
+  ],
   "bom": [
     {
       "code": "SRV-0.4-400",
@@ -37,7 +39,7 @@
   ],
   "category": "Motion",
   "checklist": [],
-  "code": "IF Cmd_Move AND In_Ready AND NOT Fault THEN\n    Out_Pos_SP := LIMIT(2.0, Pos_SP_mm, 20.0);\n    Out_Start := TRUE;\nELSE\n    Out_Start := FALSE;\nEND_IF;\n\nOutOfRange := (Pos_SP_mm < 2.0) OR (Pos_SP_mm > 20.0);\nFault := NOT In_Ready AND Out_Start;",
+  "code": "IF Cmd_Move AND In_Ready AND NOT Fault THEN\n    Out_Pos_SP := LIMIT(2.0, Pos_SP_mm, 20.0);\n    Out_Start := TRUE;\nELSE\n    Out_Start := FALSE;\nEND_IF;\n\nOutOfRange := (Pos_SP_mm < 2.0) OR (Pos_SP_mm > 20.0);\nFault := NOT In_Ready AND Out_Start;\n\n// slow weight correction from the average tablet weight\nWeightCtl(Enable := WeightCtl_On, AvgWeight_mg := AvgWeight_mg, Target_mg := Target_mg);\nOut_Pos_SP := LIMIT(2.0, Out_Pos_SP + WeightCtl.Correction_mm, 20.0);",
   "currentVersion": "1.1",
   "description": "Positions the fill depth cam to set the powder dose, with a ready and range check.",
   "devTimes": {
@@ -60,6 +62,21 @@
       "rpn": 112,
       "severity": 7,
       "status": "Implemented"
+    },
+    {
+      "actions": "Recipe check at the start",
+      "alarmId": "fda1",
+      "cause": "Missing absolute encoder",
+      "componentId": "tp-bom-fd-servo",
+      "controls": "Absolute encoder and a homing check",
+      "detection": 4,
+      "effect": "Wrong fill depth at restart",
+      "failureMode": "Servo loses its position after a power loss",
+      "id": "fdd2",
+      "occurrence": 2,
+      "rpn": 64,
+      "severity": 8,
+      "status": "Verified"
     }
   ],
   "id": "tp-cm-fill",
@@ -157,6 +174,27 @@
       "id": "fd8",
       "name": "Fault",
       "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Weight control enabled",
+      "id": "fd9",
+      "name": "WeightCtl_On",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Average tablet weight",
+      "id": "fd10",
+      "name": "AvgWeight_mg",
+      "scope": "Input"
+    },
+    {
+      "dataType": "REAL",
+      "description": "Target tablet weight",
+      "id": "fd11",
+      "name": "Target_mg",
+      "scope": "Input"
     }
   ]
 }

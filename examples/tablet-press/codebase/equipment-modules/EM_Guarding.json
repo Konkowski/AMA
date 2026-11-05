@@ -6,7 +6,7 @@
   "assignedFBs": [],
   "category": "Safety",
   "checklist": [],
-  "code": "",
+  "code": "// The press runs only with every guard closed and the emergency stop released\nGuardsOK := Door_Front_OK AND Door_Rear_OK AND NOT EStop_Active;\n\nIF NOT GuardsOK THEN\n    Stop_Request := TRUE;\nELSIF Reset_Cmd THEN\n    Stop_Request := FALSE;\nEND_IF;",
   "currentVersion": "1.1",
   "description": "Allows the press to run only with the guards closed.",
   "devTimes": {
@@ -14,7 +14,21 @@
     "hmiHours": 2,
     "plcHours": 6
   },
-  "dfmea": [],
+  "dfmea": [
+    {
+      "actions": "Cover in the safety validation",
+      "cause": "Automatic reset of the stop request",
+      "controls": "Reset requires a deliberate operator command",
+      "detection": 3,
+      "effect": "Operator injury risk",
+      "failureMode": "Press restarts by itself after the door closes",
+      "id": "emgd1",
+      "occurrence": 2,
+      "rpn": 60,
+      "severity": 10,
+      "status": "Verified"
+    }
+  ],
   "id": "tp-em-guarding",
   "io": [],
   "lastModifiedBy": "Demo Author",
@@ -41,6 +55,41 @@
       "description": "All guards closed",
       "id": "emg1",
       "name": "GuardsOK",
+      "scope": "Output"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Front door closed",
+      "id": "emg2",
+      "name": "Door_Front_OK",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Rear door closed",
+      "id": "emg3",
+      "name": "Door_Rear_OK",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Emergency stop pressed",
+      "id": "emg4",
+      "name": "EStop_Active",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Reset",
+      "id": "emg5",
+      "name": "Reset_Cmd",
+      "scope": "Input"
+    },
+    {
+      "dataType": "BOOL",
+      "description": "Stop the press",
+      "id": "emg6",
+      "name": "Stop_Request",
       "scope": "Output"
     }
   ]
